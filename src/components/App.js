@@ -35,7 +35,7 @@ function App() {
         <ColorModeContext.Provider value={colorMode}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <Router>
+                <Router basename="/intheair_frontend">
                     <AuthProvider>
                         <BarreViolette />
                         <DataProvider>
