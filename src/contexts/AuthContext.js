@@ -30,7 +30,7 @@ export default function AuthProvider({ children }) {
         e.preventDefault();
         e.stopPropagation();
         // API call with the user creditentials
-        let response = await fetch(apiUrl + "/api/login/", {
+        let response = await fetch("/api/login/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export default function AuthProvider({ children }) {
     let updateToken = async () => {
         // API call
         let iterator = 0;
-        let response = await fetch(apiUrl + "/api/token/refresh/", {
+        let response = await fetch("/api/token/refresh/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
