@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/intheair_frontend/static/css/main.be060add.css",
-    "main.js": "/intheair_frontend/static/js/main.01558f3a.js",
+    "main.js": "/intheair_frontend/static/js/main.98dd1d50.js",
     "static/media/Montserrat-VariableFont_wght.ttf": "/intheair_frontend/static/media/Montserrat-VariableFont_wght.3faa3eef13649db02044.ttf",
     "static/media/loginContact.webp": "/intheair_frontend/static/media/loginContact.795da5058a04cbd226c8.webp",
     "static/media/logoBlanc.webp": "/intheair_frontend/static/media/logoBlanc.c6617f6609cfd04d74a9.webp",
     "index.html": "/intheair_frontend/index.html",
     "main.be060add.css.map": "/intheair_frontend/static/css/main.be060add.css.map",
-    "main.01558f3a.js.map": "/intheair_frontend/static/js/main.01558f3a.js.map"
+    "main.98dd1d50.js.map": "/intheair_frontend/static/js/main.98dd1d50.js.map"
   },
   "entrypoints": [
     "static/css/main.be060add.css",
-    "static/js/main.01558f3a.js"
+    "static/js/main.98dd1d50.js"
   ]
 }
