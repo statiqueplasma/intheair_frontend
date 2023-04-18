@@ -9,6 +9,11 @@ export function useAuth() {
 }
 
 export default function AuthProvider({ children }) {
+    const localapi = false;
+    const apiUrl = localapi
+        ? "https://localhost:8000"
+        : "http://intheair.pythonanywhere.com";
+
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     //check if there are data in the local storage and init the user and token variable with them
@@ -25,7 +30,7 @@ export default function AuthProvider({ children }) {
         e.preventDefault();
         e.stopPropagation();
         // API call with the user creditentials
-        let response = await fetch("/api/login/", {
+        let response = await fetch(apiUrl + "/api/login/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -63,7 +68,7 @@ export default function AuthProvider({ children }) {
     let updateToken = async () => {
         // API call
         let iterator = 0;
-        let response = await fetch("/api/token/refresh/", {
+        let response = await fetch(apiUrl + "/api/token/refresh/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
