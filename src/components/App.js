@@ -35,89 +35,71 @@ function App() {
         <ColorModeContext.Provider value={colorMode}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <Router basename="/intheair_frontend">
+                <Router>
                     <AuthProvider>
                         <BarreViolette />
                         <DataProvider>
                             <Routes>
                                 <Route path="/" element={<Home />} exact />
-                                <Route
-                                    exact
-                                    path="/login"
-                                    element={<Login />}
-                                />
-                                <Route exact path="/test" element={<Test />} />
-                                <Route exact element={<PrivateRoute />}>
+                                <Route path="/login" element={<Login />} />
+                                <Route path="/test" element={<Test />} />
+                                <Route element={<PrivateRoute />}>
                                     <Route
-                                        exact
                                         path="/dashboard"
                                         element={<Dashboard />}
                                     />
                                     <Route
-                                        exact
                                         path="/userroute"
                                         element={<UserRoute />}
                                     />
                                     <Route element={<AdminRoute />}>
                                         <Route
-                                            exact
                                             path="/admin"
                                             element={<AdminPage />}
                                         >
                                             <Route
-                                                exact
                                                 path="/admin/users/"
                                                 element={<Users />}
                                             />
                                             <Route
-                                                exact
                                                 path="/admin/projects"
                                                 element={<Projects />}
                                             />
                                             <Route
-                                                exact
                                                 path="/admin/projecttype"
                                                 element={<ProjecttypeSingle />}
                                             />
                                             <Route
-                                                exact
                                                 path="/admin/project/"
                                                 element={<ProjectSingle />}
                                             >
                                                 <Route
-                                                    exact
                                                     path="/admin/project/:id"
                                                     element={<ProjectSingle />}
                                                 />
                                             </Route>
                                             <Route
-                                                exact
                                                 path="/admin/companies"
                                                 element={<Companies />}
                                             />
                                             <Route
-                                                exact
                                                 path="/admin/sector"
                                                 element={<SectorSingle />}
                                             />
                                             <Route
-                                                exact
                                                 path="/admin/company/"
                                                 element={<CompanySingle />}
                                             >
                                                 <Route
-                                                    exact
                                                     path="/admin/company/:id"
                                                     element={<CompanySingle />}
                                                 />
                                             </Route>
                                             <Route
-                                                exact
                                                 path="/admin/user/"
                                                 element={<UserSingle />}
                                             >
                                                 <Route
-                                                    exact
                                                     path="/admin/user/:id"
                                                     element={<UserSingle />}
                                                 />
