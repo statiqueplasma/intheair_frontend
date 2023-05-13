@@ -33,25 +33,21 @@ const Topbar = () => {
     useEffect(() => {
         if (responsStat) {
             console.log(responsStat);
-            let arr = [];
-            let arr2 = [];
-            if (errors.length > 1) {
-                arr.push(errors);
-            }
-            if (success.length > 1) {
-                arr2.push(success);
-            }
+
             if (responsStat.status >= 200 && responsStat.status <= 203) {
                 console.log("pushed to success");
                 if (responsStat.keep !== null) {
-                    arr2.push(responsStat);
+                    setSuccess((arr) => [...arr, responsStat]);
+                    window.scrollTo({
+                        top: 0,
+                        left: 0,
+                        behavior: "smooth",
+                    });
                 }
             } else {
-                if (responsStat.error !== null) arr.push(responsStat);
-                console.log("pushed to error");
+                setErrors((arr) => [...arr, responsStat]);
+                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
             }
-            setSuccess(arr2);
-            setErrors(arr);
             setOpen(true);
         }
     }, [responsStat]);
@@ -136,7 +132,7 @@ const Topbar = () => {
             {errors.length > 0 &&
                 errors.map((response, index) => {
                     return (
-                        // ======== NOTIFICATION SUCCESS ============
+                        // ======== NOTIFICATION ERROR ============
                         <Box
                             key={index}
                             sx={{ width: "100%", m: "10px 0 0 0" }}
@@ -152,6 +148,7 @@ const Topbar = () => {
                                             fontSize="300px"
                                             onClick={() => {
                                                 setOpen(false);
+                                                setErrors([]);
                                             }}
                                         >
                                             <CloseIcon fontSize="300px" />
@@ -181,6 +178,7 @@ const Topbar = () => {
             {success.length > 0 &&
                 success.map((response, index) => {
                     return (
+                        // ======== NOTIFICATION SUCCESS ============
                         <Box
                             key={index}
                             sx={{ width: "100%", m: "10px 0 0 0" }}
@@ -196,6 +194,8 @@ const Topbar = () => {
                                             fontSize="300px"
                                             onClick={() => {
                                                 setOpen(false);
+
+                                                setSuccess([]);
                                             }}
                                         >
                                             <CloseIcon fontSize="300px" />
@@ -205,6 +205,7 @@ const Topbar = () => {
                                         mb: 2,
                                         height: "60px",
                                         alignItems: "center",
+                                        color: "#065006",
                                         backgroundColor: "#8dee8d",
                                     }}
                                 >

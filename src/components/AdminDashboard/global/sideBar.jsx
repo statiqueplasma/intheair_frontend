@@ -7,7 +7,7 @@ import {
     sidebarClasses,
 } from "react-pro-sidebar";
 import { useState } from "react";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, IconButton, Typography, useTheme, Divider } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { tokens } from "../../../theme";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -19,14 +19,15 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import FolderIcon from "@mui/icons-material/Folder";
 import DomainAddIcon from "@mui/icons-material/DomainAdd";
 import AddHomeIcon from "@mui/icons-material/AddHome";
-import FileOpenIcon from "@mui/icons-material/FileOpen";
+import AddchartIcon from "@mui/icons-material/Addchart";
+import AssessmentIcon from "@mui/icons-material/Assessment";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
     let navigate = useNavigate();
     const location = useLocation();
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-
     const click = (title, to) => {
         setSelected(title);
         navigate(to);
@@ -62,14 +63,23 @@ const SideBar = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [selected, setSelected] = useState("Dashboard");
+    const { user, logIn } = useAuth();
     const separatorStyle =
         theme.palette.mode === "light"
             ? colors.black[400]
             : colors.turquoise[600];
     return (
-        <div style={{ display: "flex", minHeight: "900px", height: "100%" }}>
+        <div
+            style={{
+                display: "flex",
+                minHeight: "920px",
+                height: "100%",
+                position: "sticky",
+                top: 0,
+            }}
+        >
             <Sidebar
-                transitionDuration={300}
+                transitionDuration={500}
                 rootStyles={{
                     [`.${sidebarClasses.container}`]: {
                         boxShadow: `${
@@ -114,18 +124,37 @@ const SideBar = () => {
                         color={colors.black[300]}
                     >
                         {!collapsed && (
-                            <Typography
-                                variant="h6"
-                                color={
-                                    theme.palette.mode === "light"
-                                        ? colors.indigo[600]
-                                        : colors.black[300]
-                                }
-                                marginTop="40px"
-                                marginBottom="40px"
+                            <Box
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="center"
+                                margin="auto"
                             >
-                                ADMINIS
-                            </Typography>
+                                <Typography
+                                    variant="h4"
+                                    align="center"
+                                    color={
+                                        theme.palette.mode === "light"
+                                            ? colors.indigo[600]
+                                            : colors.black[300]
+                                    }
+                                    marginTop="40px"
+                                >
+                                    {user.username.toUpperCase()}
+                                </Typography>
+                                <Typography
+                                    variant="h6"
+                                    align="center"
+                                    color={
+                                        theme.palette.mode === "light"
+                                            ? colors.black[400]
+                                            : colors.white[300]
+                                    }
+                                    marginBottom="40px"
+                                >
+                                    {user.user_type}
+                                </Typography>
+                            </Box>
                         )}
                         <IconButton onClick={() => collapseSidebar()}>
                             <MenuOutlinedIcon />
@@ -157,6 +186,11 @@ const SideBar = () => {
                         selected={selected}
                         setSelected={setSelected}
                     />
+                    <hr
+                        style={{
+                            border: `1.5px solid ${colors.black["400"]}`,
+                        }}
+                    />
                     {/* ============================== Project SECTION ======================== */}
                     {!collapsed && (
                         <Typography
@@ -169,7 +203,7 @@ const SideBar = () => {
                         </Typography>
                     )}
                     <Item
-                        title="Projects"
+                        title="Projects/Types"
                         to="/admin/projects"
                         icon={<FolderIcon />}
                         selected={selected}
@@ -183,13 +217,24 @@ const SideBar = () => {
                         setSelected={setSelected}
                     />
                     <Item
-                        title="Add Project Type"
+                        title="Add New Types"
                         to="/admin/projecttype"
-                        icon={<BookmarkAddIcon />}
+                        icon={<AddchartIcon />}
                         selected={selected}
                         setSelected={setSelected}
                     />
-
+                    <Item
+                        title="Add/Edit Report"
+                        to="/admin/report"
+                        icon={<AssessmentIcon />}
+                        selected={selected}
+                        setSelected={setSelected}
+                    />
+                    <hr
+                        style={{
+                            border: `1.5px solid ${colors.black["400"]}`,
+                        }}
+                    />
                     {/* ============================== Company SECTION ======================== */}
                     {!collapsed && (
                         <Typography
@@ -221,6 +266,11 @@ const SideBar = () => {
                         icon={<AddHomeIcon />}
                         selected={selected}
                         setSelected={setSelected}
+                    />
+                    <hr
+                        style={{
+                            border: `1.5px solid ${colors.black["400"]}`,
+                        }}
                     />
                 </Menu>
             </Sidebar>

@@ -9,11 +9,6 @@ export function useAuth() {
 }
 
 export default function AuthProvider({ children }) {
-    const localapi = false;
-    const apiUrl = localapi
-        ? "https://localhost:8000"
-        : "http://intheair.pythonanywhere.com";
-
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     //check if there are data in the local storage and init the user and token variable with them
@@ -52,6 +47,10 @@ export default function AuthProvider({ children }) {
             setAuthTokens(data);
             setUser(jwt_decode(data.access));
             localStorage.setItem("authToken", JSON.stringify(data));
+            localStorage.setItem(
+                "user",
+                JSON.stringify(jwt_decode(data.access))
+            );
             navigate("/userroute");
         }
     }
@@ -61,6 +60,7 @@ export default function AuthProvider({ children }) {
         setAuthTokens(null);
         setUser(null);
         localStorage.removeItem("authToken");
+        localStorage.removeItem("user");
         navigate("/login");
     };
 
@@ -85,6 +85,10 @@ export default function AuthProvider({ children }) {
             setAuthTokens(data);
             setUser(jwt_decode(data.access));
             localStorage.setItem("authToken", JSON.stringify(data));
+            localStorage.setItem(
+                "user",
+                JSON.stringify(jwt_decode(data.access))
+            );
         } else {
             //if the api call fails the user is logged out
             if (iterator > 5) logOut();

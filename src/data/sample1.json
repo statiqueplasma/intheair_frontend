@@ -1,0 +1,41 @@
+{
+    "id": {
+        "project_name": "Projet Test",
+        "project_type": "topographie",
+        "layers": {
+            "rectangles": [
+                {
+                    "name": "water",
+                    "bounds": [[51.49, -0.08], [51.5, -0.06]]
+                }
+            ],
+            "markers": [
+                {
+                    "name": "interest point 1",
+                    "position": [51.49, -0.08]
+                },
+                {
+                    "name": "interest point 2",
+                    "position": [51.48, -0.08]
+                }
+            ],
+            "polygons": [
+                {
+                    "name": "polygon 1",
+                    "positions": [[51.49, -0.08], [51.5, -0.06], [51.5, -0.05]]
+                },
+                {
+                    "name": "polygon 2",
+                    "positions": [[51.49, -0.08], [51.5, -0.05], [51.5, -0.06], [51.3, -0.06]]
+                }
+            ],
+            "circles": [
+                {
+                    "name": "circle 1",
+                    "center": [51.47, -0.08],
+                    "radius": 500
+                }
+            ]
+        }
+    }
+}

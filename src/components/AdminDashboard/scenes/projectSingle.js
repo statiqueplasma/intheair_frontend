@@ -23,6 +23,15 @@ import FolderIcon from "@mui/icons-material/Folder";
 import Loading from "../global/loading";
 import Popper from "@mui/material/Popper";
 import Fade from "@mui/material/Fade";
+import { FileUpload } from "primereact/fileupload";
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
+import DescriptionIcon from "@mui/icons-material/Description";
+import NestedFileBrowser from "../global/filebrowser";
+import LinearProgress from "@mui/material/LinearProgress";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import EditIcon from "@mui/icons-material/Edit";
+import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
+import AssessmentIcon from "@mui/icons-material/Assessment";
 const ProjectSingle = () => {
     const initialValues = {
         name: "",
@@ -32,6 +41,7 @@ const ProjectSingle = () => {
         user: "",
     };
     const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
     let navigate = useNavigate();
     const {
         usersData,
@@ -43,19 +53,49 @@ const ProjectSingle = () => {
         projectData,
         deleteProjectData,
         createProject,
+        datatypes,
+        filetypes,
+        fetchFileTypes,
+        fetchDataTypes,
+        fileext,
+        fetchFileExt,
+        uploadFiles,
+        filesUploaded,
+        files,
+        fetchFiles,
+        checkReportData,
+        reportData,
+        checkForReport,
     } = useData();
-    const colors = tokens(theme.palette.mode);
+
     const [loading, setLoading] = useState(true);
     const [formValues, setFormValues] = useState(false);
     const [openPoper, setOpenPoper] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const { id } = useParams();
+    const [fileform, setFileform] = useState({
+        name: "",
+        description: "",
+        file_type: "",
+        data_type: "",
+        project: id,
+        uploaded_files: [],
+    });
+
     const isNonMobile = useMediaQuery("(min-width:700px)");
+    let uploadFile = (event) => {
+        if (
+            (fileform.name !== "" && fileform.description !== "",
+            fileform.file_type !== "" && fileform.data_type !== "")
+        ) {
+            uploadFiles({ ...fileform, uploaded_files: event.files });
+        }
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    };
     const handleFormSubmit = (values) => {
         if (id !== undefined) {
             if (values) {
                 updateProject({ values, id });
-                console.log(values);
             }
         } else {
             if (values) {
@@ -82,9 +122,15 @@ const ProjectSingle = () => {
         if (loading) {
             if (id !== undefined) {
                 fetchSingleProjectData(id);
+                fetchFiles(id);
+                fetchDataTypes();
+                fetchFileTypes();
+                fetchFileExt();
+                checkForReport(id);
             }
             fetchProjecttypesData();
             fetchUsersData();
+
             setLoading(false);
         }
         if (id === undefined) {
@@ -92,11 +138,19 @@ const ProjectSingle = () => {
                 setFormValues(true);
             }
         } else {
-            if (projectData && projecttypesData && usersData) {
+            if (
+                projectData &&
+                projecttypesData &&
+                usersData &&
+                filetypes &&
+                datatypes &&
+                fileext &&
+                files
+            ) {
                 setFormValues(true);
             }
         }
-    }, [projectData, projecttypesData, loading]);
+    }, [projectData, projecttypesData, loading, filetypes, datatypes, fileext]);
     const dateFormater = (date) =>
         new Date(date).toDateString() +
         " " +
@@ -119,6 +173,22 @@ const ProjectSingle = () => {
         >
             {formValues ? (
                 <>
+                    {!filesUploaded && (
+                        <Box mt="40px" mb="20px">
+                            <Typography
+                                variant="h4"
+                                fontStyle="oblique"
+                                align="center"
+                                color="primary"
+                                mb="25px"
+                            >
+                                Uploading Your Data...
+                            </Typography>
+                            <Box sx={{ width: "80%", m: "auto" }}>
+                                <LinearProgress />
+                            </Box>
+                        </Box>
+                    )}
                     <Box
                         display="flex"
                         flexDirection="row"
@@ -502,6 +572,310 @@ const ProjectSingle = () => {
                             )}
                         </Formik>
                     </Box>
+                    {id !== undefined && (
+                        <Box>
+                            {/* File section  */}
+
+                            <Box>
+                                <Header
+                                    icon={
+                                        <DescriptionIcon fontSize="inherit" />
+                                    }
+                                    title="Files"
+                                    subtitle="All Files LInked to this project"
+                                />
+                                <Box width="80%" m="30px auto 40px auto">
+                                    <NestedFileBrowser
+                                        title={"Files Uploaded :"}
+                                        files={files}
+                                        filetypes={filetypes}
+                                        extention={fileext}
+                                        project={{
+                                            id: projectData.id,
+                                            name: projectData.name,
+                                        }}
+                                    />
+                                </Box>
+                                <Box width="80%" m="auto" position="relative">
+                                    <Box
+                                        width="100%"
+                                        m="5px auto 20px auto"
+                                        sx={{
+                                            "& .p-fileupload-buttonbar": {
+                                                background: colors.white["700"],
+                                                borderColor: `${
+                                                    theme.palette.mode ===
+                                                        "dark" &&
+                                                    colors.black["800"] +
+                                                        " !important"
+                                                } `,
+                                            },
+                                            "& .p-fileupload-buttonbar > .p-button":
+                                                {
+                                                    background:
+                                                        colors.indigo["500"],
+                                                },
+                                            "& .p-fileupload-content": {
+                                                background: colors.white["500"],
+                                                color: colors.black["500"],
+                                                borderColor: `${
+                                                    theme.palette.mode ===
+                                                        "dark" &&
+                                                    colors.black["800"] +
+                                                        " !important"
+                                                } `,
+                                            },
+                                            "& .p-fileupload": {
+                                                border: "0px",
+                                            },
+                                            "& .p-fileupload-buttonbar>.p-disabled":
+                                                {
+                                                    backgroundColor: `${
+                                                        theme.palette.mode ===
+                                                            "dark" &&
+                                                        colors.white["400"]
+                                                    } !important`,
+                                                },
+                                        }}
+                                    >
+                                        <Typography
+                                            color={colors.indigo["400"]}
+                                            fontSize="20px"
+                                            mb="5px"
+                                        >
+                                            Upload New File to this Project
+                                        </Typography>
+                                        <Box
+                                            display="grid"
+                                            m="40px 0"
+                                            gap="30px"
+                                            gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                                            sx={{
+                                                "& > div": {
+                                                    gridColumn: isNonMobile
+                                                        ? undefined
+                                                        : "span 4",
+                                                },
+                                            }}
+                                        >
+                                            <TextField
+                                                fullWidth
+                                                variant="filled"
+                                                label="File Name"
+                                                onChange={(e) =>
+                                                    setFileform({
+                                                        ...fileform,
+                                                        name: e.target.value,
+                                                    })
+                                                }
+                                                value={fileform.name}
+                                                name="name"
+                                                sx={{ gridColumn: "span 2" }}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                variant="filled"
+                                                label="Description"
+                                                onChange={(e) =>
+                                                    setFileform({
+                                                        ...fileform,
+                                                        description:
+                                                            e.target.value,
+                                                    })
+                                                }
+                                                value={fileform.description}
+                                                name="description"
+                                                sx={{ gridColumn: "span 2" }}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                variant="filled"
+                                                select
+                                                label="File Type"
+                                                onChange={(e) =>
+                                                    setFileform({
+                                                        ...fileform,
+                                                        file_type:
+                                                            e.target.value,
+                                                    })
+                                                }
+                                                value={fileform.file_type}
+                                                name="file_type"
+                                                sx={{ gridColumn: "span 2" }}
+                                            >
+                                                {fileext.map((option) => (
+                                                    <MenuItem
+                                                        key={option.id}
+                                                        value={option.id}
+                                                    >
+                                                        {option.extention}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                            <TextField
+                                                fullWidth
+                                                select
+                                                variant="filled"
+                                                label="Data Type"
+                                                onChange={(e) =>
+                                                    setFileform({
+                                                        ...fileform,
+                                                        data_type:
+                                                            e.target.value,
+                                                    })
+                                                }
+                                                value={fileform.data_type}
+                                                name="data_type"
+                                                sx={{ gridColumn: "span 2" }}
+                                            >
+                                                {datatypes.map((option) => (
+                                                    <MenuItem
+                                                        key={option.id}
+                                                        value={option.id}
+                                                    >
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                        </Box>
+                                        <FileUpload
+                                            name="projectfile"
+                                            url={""}
+                                            multiple
+                                            accept="*"
+                                            customUpload
+                                            uploadHandler={uploadFile}
+                                            emptyTemplate={
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        alignItems: "center",
+                                                        justifyContent:
+                                                            "center",
+                                                        color: colors.black[
+                                                            "500"
+                                                        ],
+                                                    }}
+                                                >
+                                                    <Box fontSize="100px">
+                                                        <NoteAddIcon fontSize="200px" />
+                                                    </Box>
+                                                    <p
+                                                        style={{
+                                                            fontSize: "15px",
+                                                        }}
+                                                    >
+                                                        Choose files or drag
+                                                        them here to upload them
+                                                    </p>
+                                                </Box>
+                                            }
+                                        />
+                                    </Box>
+                                    {!filesUploaded && (
+                                        <Box
+                                            sx={{
+                                                zIndex: "2000",
+                                                width: "100%",
+                                                margin: "auto",
+                                                height: "95%",
+                                                display: "block",
+                                                position: "absolute",
+                                                backgroundColor: `${
+                                                    theme.palette.mode ===
+                                                    "light"
+                                                        ? colors.black["300"] +
+                                                          40
+                                                        : colors.white["200"] +
+                                                          40
+                                                }`,
+                                                top: "70px",
+                                                left: "0px",
+                                            }}
+                                        >
+                                            <Box mt="200px">
+                                                <Typography
+                                                    variant="h4"
+                                                    fontStyle="oblique"
+                                                    align="center"
+                                                    color="primary"
+                                                    mb="25px"
+                                                >
+                                                    Uploading Your Data...
+                                                </Typography>
+                                                <Box
+                                                    sx={{
+                                                        width: "80%",
+                                                        m: "auto",
+                                                    }}
+                                                >
+                                                    <LinearProgress />
+                                                </Box>
+                                            </Box>
+                                        </Box>
+                                    )}
+                                </Box>
+                            </Box>
+                            {/* Report Section */}
+                            <Box mt="50px">
+                                <Header
+                                    icon={<AssessmentIcon fontSize="inherit" />}
+                                    title={"Report"}
+                                    subtitle={"The Report for this project"}
+                                />
+                                {reportData ? (
+                                    <Box
+                                        ml="60px"
+                                        mt="20px"
+                                        display="flex"
+                                        justifyContent="space-between"
+                                        width="80%"
+                                    >
+                                        <Typography variant="h5">
+                                            {reportData.name}
+                                        </Typography>
+                                        <Button
+                                            onClick={() =>
+                                                navigate(
+                                                    `admin/report/${reportData.id}`
+                                                )
+                                            }
+                                        >
+                                            Edit
+                                            <EditIcon />
+                                        </Button>
+                                    </Box>
+                                ) : (
+                                    <Box
+                                        ml="60px"
+                                        mt="20px"
+                                        mb="50px"
+                                        display="flex"
+                                        justifyContent="space-between"
+                                        width="80%"
+                                    >
+                                        <Typography variant="h5">
+                                            Add A Report to the Project
+                                        </Typography>
+                                        <Button
+                                            variant="contained"
+                                            p="10px"
+                                            height="50px"
+                                            bgcolor="grey"
+                                            display="flex"
+                                            onClick={() => {}}
+                                        >
+                                            <Typography mr="10px">
+                                                ADD
+                                            </Typography>
+                                            <AddToPhotosIcon />
+                                        </Button>
+                                    </Box>
+                                )}
+                            </Box>
+                        </Box>
+                    )}
                 </>
             ) : (
                 <Loading />

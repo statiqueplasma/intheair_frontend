@@ -3,6 +3,7 @@ import UserRoute from "./Routes/UserRoute";
 import Dashboard from "./UserDashboard/Dashboard";
 import BarreViolette from "./BarreViolette";
 import Login from "./Login";
+import TestGeoData from "./TestGeoData";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
     BrowserRouter as Router,
@@ -25,24 +26,43 @@ import UserSingle from "./AdminDashboard/scenes/userSingle";
 import Projects from "./AdminDashboard/scenes/projects";
 import ProjectSingle from "./AdminDashboard/scenes/projectSingle";
 import ProjecttypeSingle from "./AdminDashboard/scenes/projecttypeSingle";
-import Files from "./AdminDashboard/scenes/files";
-import FileSingle from "./AdminDashboard/scenes/fileSingle";
+import ReportPage from "./AdminDashboard/scenes/report";
 import Test from "./AdminDashboard/test";
-import "./App.css";
+import "../styles/App.css";
+
+import About from "./HomeCode/About";
+import Services from "./HomeCode/Services";
+import Contact from "./HomeCode/Contact";
+import Faq from "./HomeCode/Faq";
+import Navbare from "./HomeCode/Navbare";
+import Logout from "./Routes/Logout";
+
 function App() {
     const [theme, colorMode] = useMode();
+    const user = localStorage.getItem("authToken");
     return (
         <ColorModeContext.Provider value={colorMode}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <Router>
                     <AuthProvider>
-                        <BarreViolette />
                         <DataProvider>
                             <Routes>
                                 <Route path="/" element={<Home />} exact />
                                 <Route path="/login" element={<Login />} />
+                                <Route path="/logout" element={<Logout />} />
                                 <Route path="/test" element={<Test />} />
+                                <Route
+                                    path="/testgeodata"
+                                    element={<TestGeoData />}
+                                />
+                                <Route path="/about" element={<About />} />
+                                <Route path="/faq" element={<Faq />} />
+                                <Route
+                                    path="/services"
+                                    element={<Services />}
+                                />
+
                                 <Route element={<PrivateRoute />}>
                                     <Route
                                         path="/dashboard"
@@ -102,6 +122,15 @@ function App() {
                                                 <Route
                                                     path="/admin/user/:id"
                                                     element={<UserSingle />}
+                                                />
+                                            </Route>
+                                            <Route
+                                                path="/admin/report/"
+                                                element={<ReportPage />}
+                                            >
+                                                <Route
+                                                    path="/admin/report/:id"
+                                                    element={<ReportPage />}
                                                 />
                                             </Route>
                                         </Route>

@@ -1,12 +1,26 @@
 import { useState, useEffect } from "react";
-import { Form, Nav, Container, Stack } from "react-bootstrap";
+import {
+    Form,
+    Tab,
+    Tabs,
+    Container,
+    Stack,
+    Row,
+    Col,
+    Card,
+} from "react-bootstrap";
 import Bouton from "./Bouton";
 import { useAuth } from "../contexts/AuthContext";
-import image from "../images/loginContact.webp";
+import image1 from "../images/photo_presta_1.webp";
+import image2 from "../images/logo.webp";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as yup from "yup";
-
+import { useTheme } from "@mui/material";
+import { tokens } from "../theme";
+import fond from "../images/fond_bateau.JPG";
+import "../styles/Login.css";
+import Navbare from "./HomeCode/Navbare";
 function Client() {
     let navigate = useNavigate();
     const { user, logIn } = useAuth();
@@ -20,8 +34,15 @@ function Client() {
 
     return (
         <Form onSubmit={logIn}>
-            <Stack gap={4}>
-                <Form.Group id="email">
+            <Stack gap={4} style={{ alignItems: "center" }}>
+                <img
+                    alt=""
+                    src={image1}
+                    width="200"
+                    height="200"
+                    style={{ marginTop: "5%" }}
+                />
+                <Form.Group id="email" className="col-md-4">
                     <Form.Control
                         type="email"
                         placeholder="votreemail@email.com"
@@ -29,7 +50,7 @@ function Client() {
                         required
                     />
                 </Form.Group>
-                <Form.Group id="mdp">
+                <Form.Group id="mdp" className="col-md-4">
                     <Form.Control
                         type="password"
                         placeholder="mot de passe"
@@ -37,7 +58,10 @@ function Client() {
                         required
                     />
                 </Form.Group>
-                <Container fluid style={{ paddingLeft: "80%" }}>
+                <Container
+                    fluid
+                    style={{ paddingLeft: "60%", paddingBottom: "5%" }}
+                >
                     <Bouton
                         type={"submit"}
                         couleurFond={"#674CC0"}
@@ -70,23 +94,108 @@ function NonClient() {
     }
 
     return (
-        <Container className="align-items-center">
-            <div className="row">
-                <div
-                    className="col text-center"
-                    style={{ marginRight: "7%", borderRight: "2px solid" }}
-                >
-                    <h3 className="text-center" style={{ color: "#674CC0" }}>
-                        <strong>Contacter notre équipe</strong>
-                    </h3>
-                    <img alt="" src={image} width="300" height="300" />{" "}
-                    <h4>07 09 08 09 08</h4>
-                    <h4>contact@intheair.tech</h4>
-                </div>
-                <div className="col">
-                    <h3 className="text-center" style={{ color: "#674CC0" }}>
+        <Container style={{ paddingTop: "2%", paddingBottom: "2%" }}>
+            <Row>
+                <Col style={{ marginRight: "7%", borderRight: "2px solid" }}>
+                    <div className="text-center">
+                        <h4 style={{ color: "#674CC0" }}>
+                            <strong>Contacter notre équipe</strong>
+                        </h4>
+                        <img
+                            alt=""
+                            src={image2}
+                            width="300"
+                            style={{ paddingTop: "5%", paddingBottom: "5%" }}
+                        />{" "}
+                        <h4 style={{ paddingBottom: "5%" }}>07 09 08 09 08</h4>
+                    </div>
+                    <Formik
+                        validationSchema={schema}
+                        onSubmit={handleSubmit}
+                        initialValues={{
+                            email: "",
+                            contenu_mail: "",
+                        }}
+                    >
+                        {({
+                            handleSubmit,
+                            handleChange,
+                            values,
+                            touched,
+                            isValid,
+                            errors,
+                        }) => (
+                            <Form
+                                noValidate
+                                onSubmit={handleSubmit}
+                                style={{ paddingLeft: "0%" }}
+                            >
+                                <Stack gap={2}>
+                                    <Form.Group
+                                        className="mb-2"
+                                        controlId="validationFormikEmail"
+                                    >
+                                        <Form.Label>
+                                            <strong>Vos coordonnées</strong>
+                                        </Form.Label>
+                                        <Form.Control
+                                            type="email"
+                                            placeholder="votreemail@email.com"
+                                            name="email"
+                                            value={values.email}
+                                            onChange={handleChange}
+                                            isValid={
+                                                touched.email && !errors.email
+                                            }
+                                            isInvalid={!!errors.email}
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.email}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>
+                                            <strong>Envoyer un mail</strong>
+                                        </Form.Label>
+                                        <Form.Control
+                                            as="textarea"
+                                            rows={11}
+                                            placeholder="Saisir votre mail"
+                                            name="description"
+                                            value={values.description}
+                                            onChange={handleChange}
+                                            isValid={
+                                                touched.description &&
+                                                !errors.description
+                                            }
+                                            isInvalid={!!errors.description}
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.description}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                    <Container
+                                        fluid
+                                        style={{ paddingLeft: "80%" }}
+                                    >
+                                        <Bouton
+                                            type={"submit"}
+                                            couleurFond={"#674CC0"}
+                                            couleurTexte={"white"}
+                                        >
+                                            <strong>Envoyer</strong>
+                                        </Bouton>
+                                    </Container>
+                                </Stack>
+                            </Form>
+                        )}
+                    </Formik>
+                </Col>
+
+                <Col>
+                    <h4 className="text-center" style={{ color: "#674CC0" }}>
                         <strong>Obtenir un devis</strong>
-                    </h3>
+                    </h4>
 
                     <Formik
                         validationSchema={schema}
@@ -140,8 +249,8 @@ function NonClient() {
                                             {errors.email}
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                    <div className="row">
-                                        <div className="col-auto">
+                                    <Row>
+                                        <Col>
                                             <Form.Group className="mb-2">
                                                 <Form.Control
                                                     type="text"
@@ -159,8 +268,8 @@ function NonClient() {
                                                     {errors.prenom}
                                                 </Form.Control.Feedback>
                                             </Form.Group>
-                                        </div>
-                                        <div className="col-auto">
+                                        </Col>
+                                        <Col>
                                             <Form.Group className="mb-2">
                                                 <Form.Control
                                                     type="text"
@@ -178,8 +287,8 @@ function NonClient() {
                                                     {errors.nom}
                                                 </Form.Control.Feedback>
                                             </Form.Group>
-                                        </div>
-                                    </div>
+                                        </Col>
+                                    </Row>
                                     <Form.Group className="mb-2">
                                         <Form.Label>
                                             <strong>
@@ -330,63 +439,55 @@ function NonClient() {
                             </Form>
                         )}
                     </Formik>
-                </div>
-            </div>
+                </Col>
+            </Row>
         </Container>
     );
 }
 
 function Login() {
-    const [estClient, setEstClient] = useState(true);
     const [show, setShow] = useState(false);
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
 
     const handleShow = () => setShow(true);
 
     return (
-        <Container className="d-flex align-items-center justify-content-center">
-            {/* <Bouton onClick={handleShow}>test modal</Bouton>
-            <ModalError show={show} setShow={setShow}/> */}
+        <>
+            <Navbare />
+            <div className="login" style={{ height: "100%" }}>
+                <Container
+                    style={{ paddingTop: "10%" }}
+                    className="d-flex align-items-center justify-content-center"
+                >
+                    {/* <Bouton onClick={handleShow}>test modal</Bouton>
+			<ModalError show={show} setShow={setShow}/> */}
 
-            <Stack gap={5}>
-                <Nav fill variant="tabs" defaultActiveKey="#client">
-                    <Nav.Item as={"h3"}>
-                        <Nav.Link
-                            style={{
-                                marginLeft: "50%",
-                                marginTop: "5%",
-                                width: "50%",
-                                color: "#5DB2B6",
-                            }}
-                            href="#client"
-                            onClick={() => setEstClient(true)}
-                        >
-                            Déjà Client
-                        </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item as={"h3"}>
-                        <Nav.Link
-                            style={{
-                                marginTop: "5%",
-                                width: "50%",
-                                color: "#5DB2B6",
-                            }}
-                            href="#nonclient"
-                            onClick={() => setEstClient(false)}
-                        >
-                            Pas encore client
-                        </Nav.Link>
-                    </Nav.Item>
-                </Nav>
-
-                {estClient ? (
-                    <Container style={{ width: "30%" }}>
-                        <Client />
-                    </Container>
-                ) : (
-                    <NonClient />
-                )}
-            </Stack>
-        </Container>
+                    <Stack gap={0}>
+                        <Tabs defaultActiveKey="client" id="tab-client" fill>
+                            <Tab
+                                eventKey="client"
+                                title="Déjà client"
+                                style={{
+                                    backgroundColor: `${colors.white[800]}99`,
+                                }}
+                            >
+                                <Client />
+                            </Tab>
+                            <Tab
+                                eventKey="nonclient"
+                                title="Pas encore client"
+                                style={{
+                                    backgroundColor: `${colors.white[800]}99`,
+                                }}
+                            >
+                                <NonClient />
+                            </Tab>
+                        </Tabs>
+                    </Stack>
+                </Container>
+            </div>
+        </>
     );
 }
 

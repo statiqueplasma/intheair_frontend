@@ -11,7 +11,7 @@ function BarreViolette() {
 
     const navBarStyle = {
         backgroundColor: user
-            ? user.user_type === "AG_DATA" || user.user_type === "AG_MISS"
+            ? user.user_type === "ADMIN" || user.user_type === "AG_MISS"
                 ? vert
                 : violet
             : violet,
@@ -34,7 +34,7 @@ function BarreViolette() {
     };
     const navLinkSeparatorStyle = {
         color: user
-            ? user.user_type === "AG_DATA" || user.user_type === "AG_MISS"
+            ? user.user_type === "ADMIN" || user.user_type === "AG_MISS"
                 ? violet
                 : vert
             : vert,
@@ -70,7 +70,7 @@ function BarreViolette() {
 
                     {/* if the user is logged in we show the respective userpage button*/}
                     {user ? (
-                        user.user_type === "AG_DATA" ? (
+                        user.user_type === "ADMIN" ? (
                             //if he is an admin we show "Admin Panel" and "logout"
                             <div style={{ float: "right" }}>
                                 <Link style={navLinksStyle} to="/admin">

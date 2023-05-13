@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import {  useEffect } from "react";
-
+import BarreViolette from "../BarreViolette";
 
 function Dashboard() {
     let navigate = useNavigate()
@@ -15,8 +15,7 @@ function Dashboard() {
     }, [])
     return (
         <>
-            <h1>User Page</h1>
-            <h3>à faire par Mehdi</h3>
+            <BarreViolette/>
         </>  
     );
 }

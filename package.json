@@ -14,10 +14,16 @@
         "bootstrap": "^5.2.3",
         "formik": "^2.2.9",
         "jwt-decode": "^3.1.2",
+        "leaflet": "^1.9.3",
+        "leaflet-defaulticon-compatibility": "^0.1.1",
+        "leaflet-side-by-side": "^2.2.0",
+        "leaflet.layerscontrol-minimap": "^1.0.21",
         "react": "^18.2.0",
+        "react-beautiful-dnd": "^13.1.1",
         "react-bootstrap": "^2.7.2",
         "react-dom": "^18.2.0",
         "react-icons": "^4.8.0",
+        "react-leaflet": "^4.2.1",
         "react-pro-sidebar": "^1.0.0",
         "react-router-dom": "^6.10.0",
         "react-scripts": "5.0.1",
@@ -49,6 +55,8 @@
         ]
     },
     "devDependencies": {
+        "primereact": "^9.4.0",
+        "react-keyed-file-browser": "^1.14.0",
         "sass": "^1.62.0"
     }
 }

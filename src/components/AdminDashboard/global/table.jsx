@@ -1,6 +1,6 @@
 import { tokens } from "../../../theme";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { Box, Typography, IconButton, useTheme } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { Box, useTheme } from "@mui/material";
 
 const Table = ({
     fields,
@@ -11,6 +11,7 @@ const Table = ({
     components,
     paginationModel,
     pageSizeOptions,
+    checkbox = true,
 }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -107,7 +108,7 @@ const Table = ({
                 rows={data}
                 columns={fields}
                 components={components}
-                checkboxSelection
+                checkboxSelection={checkbox}
                 autoHeight={height ? false : true}
                 getRowId={idParam}
                 pageSizeOptions={pageSizeOptions}

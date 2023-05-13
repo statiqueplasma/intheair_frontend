@@ -40,6 +40,14 @@ const DataProvider = ({ children }) => {
     const [projectData, setProjectData] = useState();
     const [projecttypesData, setProjecttypesData] = useState();
     const [projecttypeData, setProjecttypeData] = useState();
+    const [datatypes, setDataTypes] = useState();
+    const [filetypes, setFileTypes] = useState();
+    const [fileext, setFileExt] = useState();
+    const [reportData, setReportData] = useState();
+    const [checkReportData, setCheckReportData] = useState();
+    const [sectionData, setSectionData] = useState();
+    const [filesUploaded, setFileupload] = useState(true);
+    const [files, setFiles] = useState();
     let navigate = useNavigate();
     const userTypes = [
         {
@@ -47,12 +55,16 @@ const DataProvider = ({ children }) => {
             label: "Agent Data",
         },
         {
-            value: "AG_MISS",
-            label: "Agent Mission",
+            value: "AG_COM",
+            label: "Agent Commercial",
         },
         {
             value: "CLIENT",
             label: "Client",
+        },
+        {
+            value: "ADMIN",
+            label: "* Administrateur *",
         },
     ];
     let statusCode = "";
@@ -218,14 +230,14 @@ const DataProvider = ({ children }) => {
             headers: {
                 "Content-Type": "application/json",
             },
-        });
-        statusCode = response.status;
-        error = response.statusText;
-        success = response.ok;
-        data = {};
-        buff = "";
-        response.json().then((res) => {
-            if (success) {
+        }).then((res) => {
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                fetchUsersData();
                 setResponseStat({
                     status: "201",
                     error: null,
@@ -233,6 +245,7 @@ const DataProvider = ({ children }) => {
                     message: "User Deleted Successfully",
                 });
             } else {
+                res = res.json();
                 for (var key in res) {
                     buff = buff + `${res[key]} `;
                 }
@@ -388,14 +401,14 @@ const DataProvider = ({ children }) => {
             headers: {
                 "Content-Type": "application/json",
             },
-        });
-        statusCode = response.status;
-        error = response.statusText;
-        success = response.ok;
-        data = {};
-        buff = "";
-        response.json().then((res) => {
-            if (success) {
+        }).then((res) => {
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                fetchCompaniesData();
                 setResponseStat({
                     status: "201",
                     error: null,
@@ -403,6 +416,7 @@ const DataProvider = ({ children }) => {
                     message: "Company Deleted Successfully",
                 });
             } else {
+                res = res.json();
                 for (var key in res) {
                     buff = buff + `${res[key]} `;
                 }
@@ -516,14 +530,14 @@ const DataProvider = ({ children }) => {
             headers: {
                 "Content-Type": "application/json",
             },
-        });
-        statusCode = response.status;
-        error = response.statusText;
-        success = response.ok;
-        data = {};
-        buff = "";
-        response.json().then((res) => {
-            if (success) {
+        }).then((res) => {
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                fetchSectorsData();
                 setResponseStat({
                     status: "201",
                     error: null,
@@ -531,6 +545,7 @@ const DataProvider = ({ children }) => {
                     message: "Sector Deleted Successfully",
                 });
             } else {
+                res = res.json();
                 for (var key in res) {
                     buff = buff + `${res[key]} `;
                 }
@@ -687,15 +702,14 @@ const DataProvider = ({ children }) => {
             headers: {
                 "Content-Type": "application/json",
             },
-        });
-
-        statusCode = response.status;
-        error = response.statusText;
-        success = response.ok;
-        data = {};
-        buff = "";
-        response.json().then((res) => {
-            if (success) {
+        }).then((res) => {
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                fetchProjectsData();
                 setResponseStat({
                     status: "201",
                     error: null,
@@ -703,6 +717,7 @@ const DataProvider = ({ children }) => {
                     message: "Project Deleted Successfully",
                 });
             } else {
+                res = res.json();
                 for (var key in res) {
                     buff = buff + `${res[key]} `;
                 }
@@ -797,8 +812,6 @@ const DataProvider = ({ children }) => {
         response.json().then((res) => {
             if (success) {
                 data = res;
-                setProjecttypeData(data);
-                navigate(`/admin/projects/`);
             } else {
                 for (var key in res) {
                     buff = buff + `${res[key]} `;
@@ -807,7 +820,7 @@ const DataProvider = ({ children }) => {
             setResponseStat({
                 status: statusCode,
                 error: error,
-                keep: success ? null : "yes",
+                keep: "yes",
                 message: success ? "Project Type Created Successfully" : buff,
             });
         });
@@ -816,6 +829,41 @@ const DataProvider = ({ children }) => {
     async function deleteProjecttypeData(id) {
         let response = await fetch(`/api/projecttype/${id}`, {
             method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then((res) => {
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                fetchProjecttypesData();
+                setResponseStat({
+                    status: "201",
+                    error: null,
+                    keep: "yes",
+                    message: "Project Type Deleted Successfully",
+                });
+            } else {
+                res = res.json();
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+                setResponseStat({
+                    status: statusCode,
+                    error: error,
+                    keep: "yes",
+                    message: buff,
+                });
+            }
+        });
+    }
+    // =====  Data Type for file
+    async function fetchDataTypes() {
+        let response = await fetch(`/api/datatype/`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -828,27 +876,509 @@ const DataProvider = ({ children }) => {
         buff = "";
         response.json().then((res) => {
             if (success) {
+                data = res;
+                setDataTypes(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: success ? null : "yes",
+                message: success ? "DataTypes Loaded Successfully" : buff,
+            });
+        });
+    }
+
+    async function createDatatype(obj) {
+        // API call with the user creditentials
+        let form = new FormData();
+        setFileupload(false);
+        form.append("label", obj.label);
+        form.append("description", obj.description);
+        let dataCreated = false;
+
+        for (let i = 0; i < obj.uploaded_files.length; i++) {
+            form.append("uploaded_files", obj.uploaded_files[i]);
+        }
+        let response = await fetch(`/api/datatype/`, {
+            method: "POST",
+            body: form,
+        });
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: "yes",
+                message: success ? "Data Type Created Successfully" : buff,
+            });
+            setFileupload(true);
+        });
+        if (response.status === 500) {
+            setFileupload(true);
+            setResponseStat({
+                status: statusCode,
+                error: "Could not Create this Data Type",
+                keep: "yes",
+                message:
+                    "A dependecy file for your .shp is Missing ! Or a Data Type with this label already exists !",
+            });
+        }
+    }
+    async function deleteDataType(id) {
+        let response = await fetch(`/api/datatype/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then((res) => {
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                fetchDataTypes();
                 setResponseStat({
                     status: "201",
                     error: null,
                     keep: "yes",
-                    message: "Project Type Deleted Successfully",
+                    message: "Data Type Deleted Successfully",
                 });
             } else {
+                res = res.json();
                 for (var key in res) {
                     buff = buff + `${res[key]} `;
                 }
                 setResponseStat({
                     status: statusCode,
                     error: error,
-                    keep: success ? null : "yes",
+                    keep: "yes",
                     message: buff,
                 });
             }
         });
     }
+    // ========== File type
+    async function fetchFileTypes() {
+        let response = await fetch(`/api/filetype/`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setFileTypes(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: success ? null : "yes",
+                message: success ? "FileTypes Loaded Successfully" : buff,
+            });
+        });
+    }
+    async function createFiletype(values) {
+        // API call with the user creditentials
+        let response = await fetch(`/api/filetype/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                label: values.label,
+                description: values.description,
+            }),
+        });
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: "yes",
+                message: success ? "File Type Added Successfully" : buff,
+            });
+        });
+    }
+    async function deleteFileType(id) {
+        let response = await fetch(`/api/filetype/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then((res) => {
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                fetchFileTypes();
+                setResponseStat({
+                    status: "201",
+                    error: null,
+                    keep: "yes",
+                    message: "File Type Deleted Successfully",
+                });
+            } else {
+                res = res.json();
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+                setResponseStat({
+                    status: statusCode,
+                    error: error,
+                    keep: "yes",
+                    message: buff,
+                });
+            }
+        });
+    }
+    // ========= File Extention
+    async function fetchFileExt() {
+        let response = await fetch(`/api/fileext/`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setFileExt(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: success ? null : "yes",
+                message: success ? "File Ext Loaded Successfully" : buff,
+            });
+        });
+    }
+    async function createFileExt(values) {
+        // API call with the user creditentials
+        let response = await fetch(`/api/fileext/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                extention: values.extention,
+                file_type: values.file_type,
+            }),
+        });
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: "yes",
+                message: success ? "File Extention Added Successfully" : buff,
+            });
+        });
+    }
+    async function deleteFileExt(id) {
+        let response = await fetch(`/api/fileext/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then((res) => {
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                fetchFileExt();
+                setResponseStat({
+                    status: "201",
+                    error: null,
+                    keep: "yes",
+                    message: "File Extention Deleted Successfully",
+                });
+            } else {
+                res = res.json();
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+                setResponseStat({
+                    status: statusCode,
+                    error: error,
+                    keep: "yes",
+                    message: buff,
+                });
+            }
+        });
+    }
+    // ======= Project File
+    async function fetchFiles(id) {
+        let response = await fetch(`/api/projectfile/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setFiles(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: success ? null : "yes",
+                message: success ? "Files Loaded Successfully" : buff,
+            });
+        });
+    }
+    async function uploadFiles(obj) {
+        let form = new FormData();
+        setFileupload(false);
+        form.append("name", obj.name);
+        form.append("file_ext", obj.file_type);
+        form.append("data_type", obj.data_type);
+        form.append("description", obj.description);
+        form.append("project", obj.project);
+
+        for (let i = 0; i < obj.uploaded_files.length; i++) {
+            form.append("uploaded_files", obj.uploaded_files[i]);
+        }
+        let response = await fetch(`/api/projectfile/${obj.project}`, {
+            method: "POST",
+            headers: {},
+            body: form,
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setFileupload(true);
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: "yes",
+                message: success ? "Files Uploaded Successfully" : buff,
+            });
+            fetchFiles(obj.project);
+        });
+    }
+    async function deleteProjectFile(id, project) {
+        let response = fetch(`/api/deleteprojectfile/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then((res) => {
+            fetchFiles(project);
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                setResponseStat({
+                    status: "201",
+                    error: null,
+                    keep: "yes",
+                    message: "File Deleted Successfully",
+                });
+            } else {
+                res = res.json();
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+                setResponseStat({
+                    status: statusCode,
+                    error: error,
+                    keep: "yes",
+                    message: buff,
+                });
+            }
+        });
+    }
+    // ======= Report
+    async function checkForReport(id) {
+        let response = await fetch(`/api/checkreport/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setCheckReportData(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: success ? null : "yes",
+                message: success ? "Report Loaded Successfully" : buff,
+            });
+        });
+    }
+    async function fetchReport(id) {
+        let response = await fetch(`/api/report/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setReportData(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: success ? null : "yes",
+                message: success ? "Report Loaded Successfully" : buff,
+            });
+        });
+    }
+    async function createReport(values) {
+        let response = await fetch(`/api/report/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: values.name,
+                project: values.project,
+                sections: values.sections,
+            }),
+        });
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setReportData(data);
+                navigate(`/admin/report/${data.id}`);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: "yes",
+                message: success ? "Report Created Successfully" : buff,
+            });
+        });
+    }
+    async function updateReport(id) {}
+    async function deleteReport(id) {}
+    async function createSection(id) {}
+    async function updateSection(id) {}
+    async function deleteSection(id) {}
     const contextData = {
         //RESPONSE OBJECT FOR NOTIFS
+        setResponseStat: setResponseStat,
         responsStat: responsStat,
         // USER DATA
         usersData: usersData,
@@ -889,6 +1419,36 @@ const DataProvider = ({ children }) => {
         fetchSingleProjecttypeData: fetchSingleProjecttypeData,
         createProjecttype: createProjecttype,
         deleteProjecttypeData: deleteProjecttypeData,
+        // Data Type
+        datatypes: datatypes,
+        fetchDataTypes: fetchDataTypes,
+        createDatatype: createDatatype,
+        deleteDataType: deleteDataType,
+
+        // File Type
+        filetypes: filetypes,
+        fetchFileTypes: fetchFileTypes,
+        createFiletype: createFiletype,
+        deleteFileType: deleteFileType,
+        // File Ext
+        fileext: fileext,
+        fetchFileExt: fetchFileExt,
+        createFileExt: createFileExt,
+        deleteFileExt: deleteFileExt,
+        // PROJECT FILES
+        uploadFiles: uploadFiles,
+        filesUploaded: filesUploaded,
+        files: files,
+        fetchFiles: fetchFiles,
+        deleteProjectFile: deleteProjectFile,
+        // REPORT
+        checkReportData: checkReportData,
+        reportData: reportData,
+        fetchReport: fetchReport,
+        checkForReport: checkForReport,
+        createReport: createReport,
+        updateReport: updateReport,
+        deleteReport: deleteReport,
     };
     return (
         <DataContext.Provider value={contextData}>
