@@ -28,7 +28,7 @@ import Popper from "@mui/material/Popper";
 import Fade from "@mui/material/Fade";
 import { useNavigate } from "react-router-dom";
 import DoNotDisturbAltIcon from "@mui/icons-material/DoNotDisturbAlt";
-
+import LayersIcon from "@mui/icons-material/Layers";
 import FolderOffIcon from "@mui/icons-material/FolderOff";
 
 const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
@@ -71,6 +71,7 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
                 return obj[i]["label"];
             }
         }
+        return "none";
     };
 
     const extOf = (obj, id) => {
@@ -79,11 +80,11 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
                 return obj[i]["extention"];
             }
         }
+        return "none";
     };
 
     const FolderIcon = (id) => {
         const label = labelOf(filetypes, id);
-
         switch (label.toLowerCase()) {
             case "geo_file":
                 return <MapIcon fontSize="inherit" />;
@@ -104,6 +105,8 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
         switch (label.toLowerCase()) {
             case "shapefile":
                 return <TerrainIcon fontSize="inherit" />;
+            case "raster":
+                return <LayersIcon fontSize="inherit" />;
             case "xlsx":
                 return <DataThresholdingIcon fontSize="inherit" />;
             case "csv":
@@ -166,7 +169,7 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
                     fontSize="20px"
                     mb="5px"
                 >
-                    {title}
+                    {/* {title} */}
                 </Typography>
                 {files.length > 0 && (
                     <Button

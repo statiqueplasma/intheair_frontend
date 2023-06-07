@@ -65,11 +65,13 @@ const ProjectSingle = () => {
         fetchFiles,
         checkReportData,
         reportData,
+        createReport,
         checkForReport,
     } = useData();
 
     const [loading, setLoading] = useState(true);
     const [formValues, setFormValues] = useState(false);
+    const [raster, setRaster] = useState();
     const [openPoper, setOpenPoper] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const { id } = useParams();
@@ -85,8 +87,13 @@ const ProjectSingle = () => {
     const isNonMobile = useMediaQuery("(min-width:700px)");
     let uploadFile = (event) => {
         if (
-            (fileform.name !== "" && fileform.description !== "",
-            fileform.file_type !== "" && fileform.data_type !== "")
+            (fileform.name !== "" &&
+                fileform.description !== "" &&
+                fileform.file_type !== "" &&
+                fileform.data_type !== "") ||
+            (fileform.name !== "" &&
+                fileform.description !== "" &&
+                fileform.file_type === raster)
         ) {
             uploadFiles({ ...fileform, uploaded_files: event.files });
         }
@@ -148,6 +155,11 @@ const ProjectSingle = () => {
                 files
             ) {
                 setFormValues(true);
+                for (let i = 0; i < fileext.length; i++) {
+                    if (fileext[i]["extention"] === "raster") {
+                        setRaster(fileext[i]["id"]);
+                    }
+                }
             }
         }
     }, [projectData, projecttypesData, loading, filetypes, datatypes, fileext]);
@@ -692,13 +704,13 @@ const ProjectSingle = () => {
                                                 variant="filled"
                                                 select
                                                 label="File Type"
-                                                onChange={(e) =>
+                                                onChange={(e) => {
                                                     setFileform({
                                                         ...fileform,
                                                         file_type:
                                                             e.target.value,
-                                                    })
-                                                }
+                                                    });
+                                                }}
                                                 value={fileform.file_type}
                                                 name="file_type"
                                                 sx={{ gridColumn: "span 2" }}
@@ -717,6 +729,10 @@ const ProjectSingle = () => {
                                                 select
                                                 variant="filled"
                                                 label="Data Type"
+                                                disabled={
+                                                    fileform.file_type ===
+                                                    raster
+                                                }
                                                 onChange={(e) =>
                                                     setFileform({
                                                         ...fileform,
@@ -824,7 +840,7 @@ const ProjectSingle = () => {
                                     title={"Report"}
                                     subtitle={"The Report for this project"}
                                 />
-                                {reportData ? (
+                                {checkReportData ? (
                                     <Box
                                         ml="60px"
                                         mt="20px"
@@ -833,14 +849,14 @@ const ProjectSingle = () => {
                                         width="80%"
                                     >
                                         <Typography variant="h5">
-                                            {reportData.name}
+                                            {checkReportData.name}
                                         </Typography>
                                         <Button
-                                            onClick={() =>
+                                            onClick={() => {
                                                 navigate(
-                                                    `admin/report/${reportData.id}`
-                                                )
-                                            }
+                                                    `/admin/report/${checkReportData.id}`
+                                                );
+                                            }}
                                         >
                                             Edit
                                             <EditIcon />
@@ -864,7 +880,13 @@ const ProjectSingle = () => {
                                             height="50px"
                                             bgcolor="grey"
                                             display="flex"
-                                            onClick={() => {}}
+                                            onClick={() => {
+                                                createReport({
+                                                    name: `${projectData.name} Report`,
+                                                    project: id,
+                                                    sections: [],
+                                                });
+                                            }}
                                         >
                                             <Typography mr="10px">
                                                 ADD

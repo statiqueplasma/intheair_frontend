@@ -46,6 +46,7 @@ const DataProvider = ({ children }) => {
     const [reportData, setReportData] = useState();
     const [checkReportData, setCheckReportData] = useState();
     const [sectionData, setSectionData] = useState();
+    const [reportSectionsData, setReportSectionsData] = useState();
     const [filesUploaded, setFileupload] = useState(true);
     const [files, setFiles] = useState();
     let navigate = useNavigate();
@@ -1371,9 +1372,109 @@ const DataProvider = ({ children }) => {
             });
         });
     }
-    async function updateReport(id) {}
+    async function updateReport(id, values) {
+        let response = await fetch(`/api/report/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                project: values.project,
+                name: values.name,
+                description: values.description,
+            }),
+        });
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setReportData(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: "yes",
+                message: success ? "Report Updated Successfully" : buff,
+            });
+        });
+    }
     async function deleteReport(id) {}
-    async function createSection(id) {}
+
+    async function fetchSections(id) {
+        let response = await fetch(`/api/sections/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setReportSectionsData(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: success ? null : "yes",
+                message: success ? "Sections Loaded Successfully" : buff,
+            });
+        });
+    }
+    async function createSection(object) {
+        let response = await fetch(`/api/sections/${object.report}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                report: object.report,
+                title: object.title,
+                order: object.order,
+                content: object.content,
+                parent: object.parent,
+                graph: object.graph,
+            }),
+        });
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setSectionData(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: "yes",
+                message: success ? "Section Created Successfully" : buff,
+            });
+        });
+    }
     async function updateSection(id) {}
     async function deleteSection(id) {}
     const contextData = {
@@ -1449,6 +1550,11 @@ const DataProvider = ({ children }) => {
         createReport: createReport,
         updateReport: updateReport,
         deleteReport: deleteReport,
+        // sections
+        fetchSections: fetchSections,
+        reportSectionsData: reportSectionsData,
+        createSection: createSection,
+        sectionData: sectionData,
     };
     return (
         <DataContext.Provider value={contextData}>

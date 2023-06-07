@@ -24,3 +24,13 @@ html {
     font-family: "Montserrat";
     src: local("Montserrat"), url(../fonts/Montserrat-VariableFont_wght.ttf);
 }
+
+.ql-toolbar .ql-stroke {
+    fill: none;
+    stroke: red !important;
+}
+
+.ql-toolbar .ql-fill {
+    fill: gray !important;
+    stroke: none;
+}

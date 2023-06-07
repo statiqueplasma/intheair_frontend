@@ -8,7 +8,7 @@ import "primereact/resources/themes/md-light-deeppurple/theme.css";
 import "primereact/resources/primereact.min.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <React.StrictMode>
+    // <React.StrictMode>
         <App />
-    </React.StrictMode>
+    // </React.StrictMode>
 );

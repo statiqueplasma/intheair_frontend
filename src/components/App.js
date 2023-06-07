@@ -3,7 +3,12 @@ import UserRoute from "./Routes/UserRoute";
 import Dashboard from "./UserDashboard/Dashboard";
 import BarreViolette from "./BarreViolette";
 import Login from "./Login";
-import TestGeoData from "./TestGeoData";
+import TestGeoData from "./UserDashboard/Project";
+import ProjectsPage from "./UserDashboard/ProjectsPage";
+import Project from "./UserDashboard/Project";
+import ProjectRoute from "./Routes/ProjectRoute";
+import SplitMap from "./SplitMap";
+import TestGraphs from "./UserDashboard/TestGraphs";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
     BrowserRouter as Router,
@@ -27,7 +32,6 @@ import Projects from "./AdminDashboard/scenes/projects";
 import ProjectSingle from "./AdminDashboard/scenes/projectSingle";
 import ProjecttypeSingle from "./AdminDashboard/scenes/projecttypeSingle";
 import ReportPage from "./AdminDashboard/scenes/report";
-import Test from "./AdminDashboard/test";
 import "../styles/App.css";
 
 import About from "./HomeCode/About";
@@ -36,6 +40,7 @@ import Contact from "./HomeCode/Contact";
 import Faq from "./HomeCode/Faq";
 import Navbare from "./HomeCode/Navbare";
 import Logout from "./Routes/Logout";
+import Map from "./AdminDashboard/scenes/testRaster";
 
 function App() {
     const [theme, colorMode] = useMode();
@@ -51,10 +56,14 @@ function App() {
                                 <Route path="/" element={<Home />} exact />
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/logout" element={<Logout />} />
-                                <Route path="/test" element={<Test />} />
+                                <Route path="/test" element={<Map />} />
                                 <Route
                                     path="/testgeodata"
                                     element={<TestGeoData />}
+                                />
+                                <Route
+                                    path="/testgraphs"
+                                    element={<TestGraphs />}
                                 />
                                 <Route path="/about" element={<About />} />
                                 <Route path="/faq" element={<Faq />} />
@@ -72,6 +81,17 @@ function App() {
                                         path="/userroute"
                                         element={<UserRoute />}
                                     />
+                                    <Route
+                                        path="/projects"
+                                        element={<ProjectsPage />}
+                                    />
+                                    <Route element={<ProjectRoute />}>
+                                        <Route
+                                            path="/projects/:id"
+                                            element={<Project />}
+                                        />
+                                    </Route>
+
                                     <Route element={<AdminRoute />}>
                                         <Route
                                             path="/admin"

@@ -1,0 +1,32 @@
+[
+    {
+      "id": "ruby",
+      "label": "ruby",
+      "value": 227,
+      "color": "hsl(340, 70%, 50%)"
+    },
+    {
+      "id": "lisp",
+      "label": "lisp",
+      "value": 472,
+      "color": "hsl(223, 70%, 50%)"
+    },
+    {
+      "id": "go",
+      "label": "go",
+      "value": 55,
+      "color": "hsl(309, 70%, 50%)"
+    },
+    {
+      "id": "rust",
+      "label": "rust",
+      "value": 323,
+      "color": "hsl(229, 70%, 50%)"
+    },
+    {
+      "id": "c",
+      "label": "c",
+      "value": 303,
+      "color": "hsl(71, 70%, 50%)"
+    }
+  ]

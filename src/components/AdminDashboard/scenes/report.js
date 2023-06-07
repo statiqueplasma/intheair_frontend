@@ -1,5 +1,5 @@
 import Header from "../global/header";
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
@@ -24,8 +24,14 @@ import FolderIcon from "@mui/icons-material/Folder";
 import Loading from "../global/loading";
 import Popper from "@mui/material/Popper";
 import Fade from "@mui/material/Fade";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-
+import Section from "../global/section";
+import DropSection from "../global/dropSection";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { SectionsTest } from "../test";
+import ArticleIcon from "@mui/icons-material/Article";
+import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
+export const SectionContext = createContext();
 const ReportPage = () => {
     const initialValues = {
         name: "",
@@ -33,15 +39,32 @@ const ReportPage = () => {
         project: "",
     };
     const theme = useTheme();
+
     const colors = tokens(theme.palette.mode);
     let navigate = useNavigate();
-    const { fetchReport, reportData, deleteReport } = useData();
-
+    const {
+        fetchReport,
+        reportData,
+        deleteReport,
+        fetchSections,
+        reportSectionsData,
+        datatypes,
+        fetchDataTypes,
+        createSection,
+        sectionData,
+        files,
+        fetchFiles,
+        updateReport,
+    } = useData();
+    const [sections, setSections] = useState([]);
+    const [orderedSections, setOrderedSections] = useState([]);
     const [loading, setLoading] = useState(true);
     const [dataLoaded, setDataLoaded] = useState(false);
     const [openPoper, setOpenPoper] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [newReportData, setNewReportData] = useState();
+    const [reportName, setReportName] = useState();
+    const [reportDescription, setReportDescription] = useState();
     const { id } = useParams();
 
     const isNonMobile = useMediaQuery("(min-width:700px)");
@@ -61,56 +84,229 @@ const ReportPage = () => {
         console.log(openPoper);
     };
 
-    const list = [
-        {
-            id: 1,
-            title: "Read some news",
-        },
-        {
-            id: 2,
-            title: "Go out for a walk",
-        },
-        {
-            id: 3,
-            title: "Do some exercise",
-        },
-        {
-            id: 4,
-            title: "Watch tutorials on YouTube",
-        },
-        {
-            id: 5,
-            title: "Netflix and chill",
-        },
-        {
-            id: 6,
-            title: "Read a book",
-        },
-    ];
-
-    const DragEnd = (event) => {};
     const reportSchema = yup.object().shape({
         name: yup.string().required("Field Required"),
         description: yup.string().required("Field Required"),
     });
 
+    const putInChildren = (object, arr) => {
+        let array = arr;
+
+        let found = false;
+        for (let o = 0; o < array.length; o++) {
+            if (array[o].id === object.parent) {
+                for (let i = 0; i < array[o].children.length; i++) {
+                    if (array[o].children[i] === object.id) {
+                        array[o].children[i] = object;
+                        found = true;
+                        array[o].children.sort(function (a, b) {
+                            return a.order - b.order;
+                        });
+                        return [array, found];
+                    } else if (array[o].children[i].id === object.id) {
+                        found = true;
+                        array[o].children.sort(function (a, b) {
+                            if (a.order && b.order) {
+                                return a.order - b.order;
+                            } else return 0;
+                        });
+                        return [array, found];
+                    }
+                }
+            } else {
+                if (array[o].children && array[o].children.length) {
+                    let [newarr, childfound] = putInChildren(
+                        object,
+                        array[o].children
+                    );
+                    array[o].children = newarr;
+                    found = childfound;
+                    if (found) {
+                        array[o].children.sort(function (a, b) {
+                            if (a.order && b.order) {
+                                return a.order - b.order;
+                            } else return 0;
+                        });
+                    }
+                }
+            }
+        }
+        return [array, found];
+    };
+    function orderSections(array) {
+        let arr = array;
+        let obj = [];
+        let waiting = [];
+        let found = false;
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].parent === null) {
+                obj.unshift(arr[i]);
+            } else {
+                [obj, found] = putInChildren(arr[i], obj);
+                if (found) {
+                    found = false;
+                } else {
+                    obj.push(arr[i]);
+                    waiting.push(arr[i]);
+                }
+            }
+        }
+        if (waiting.length > 0) {
+            for (let o = 0; o < obj.length; o++) {
+                obj = orderSections(obj);
+                for (let w = 0; w < waiting.length; w++) {
+                    if (obj[o].id === waiting[w].id) {
+                        waiting.splice(w, 1);
+                    }
+                }
+            }
+            obj.sort(function (a, b) {
+                if (a.order && b.order) {
+                    return a.order - b.order;
+                } else return 0;
+            });
+            return obj;
+        } else {
+            obj.sort(function (a, b) {
+                if (a.order && b.order) {
+                    return a.order - b.order;
+                } else return 0;
+            });
+            return obj;
+        }
+    }
+    const changePosition = (originID, targetID, position) => {
+        let newArr = [];
+        newArr = sections;
+        let originSection = {};
+        let targetSection = {};
+        let originIndex = 0;
+        let targetIndex = 0;
+        for (let i = 0; i < newArr.length; i++) {
+            if (newArr[i].id === originID) {
+                originSection = newArr[i];
+                originIndex = i;
+            } else if (newArr[i].id === targetID) {
+                targetSection = newArr[i];
+                targetIndex = i;
+            }
+        }
+        console.log(originIndex, targetIndex);
+        if (position === "above") {
+            let parentBuff = newArr[targetIndex].parent;
+            let orderBuff = newArr[targetIndex].order;
+            for (let i = 0; i < newArr.length; i++) {
+                if (
+                    newArr[i].parent === targetSection.parent &&
+                    newArr[i].order >= targetSection.order
+                ) {
+                    newArr[i].order++;
+                }
+                if (
+                    newArr[i].parent === originSection.parent &&
+                    newArr[i].order > originSection.order
+                ) {
+                    newArr[i].order--;
+                }
+                if (newArr[i].id === parentBuff) {
+                    newArr[i].children.push(originID);
+                }
+                if (newArr[i].id === originSection.parent) {
+                    let rm_index = newArr[i].children.indexOf(originID);
+                    newArr[i].children.splice(rm_index, 1);
+                }
+            }
+            newArr[originIndex].parent = parentBuff;
+            newArr[originIndex].order = orderBuff;
+        } else if (position === "child") {
+            let parentBuff = newArr[targetIndex].id;
+            for (let i = 0; i < newArr.length; i++) {
+                if (newArr[i].parent === newArr[targetIndex].id) {
+                    newArr[i].order++;
+                }
+                if (newArr[i].parent !== null) {
+                    if (
+                        newArr[i].parent === originSection.parent &&
+                        newArr[i].order > originSection.order
+                    ) {
+                        newArr[i].order--;
+                    }
+                }
+                if (newArr[i].id === parentBuff) {
+                    newArr[i].children.push(originID);
+                }
+                if (newArr[i].id === originSection.parent) {
+                    let rm_index = newArr[i].children.indexOf(originID);
+                    newArr[i].children.splice(rm_index, 1);
+                }
+            }
+            newArr[originIndex].parent = parentBuff;
+            newArr[originIndex].order = 1;
+        }
+        console.log("new arr = ", newArr);
+        setSections(newArr);
+        var buff = JSON.parse(JSON.stringify(sections));
+        setOrderedSections(orderSections(buff));
+        console.log("new sorted arr = ", orderedSections);
+    };
+    const updateAll = async () => {
+        for (let i = 0; i < sections.length; i++) {
+            const element = sections[i];
+            let response = await fetch(`/api/section/${element.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    report: id,
+                    title: element.title,
+                    content: element.content,
+                    graph: element.graph,
+                    order: element.order,
+                    parent: element.parent,
+                }),
+            });
+
+            var success = response.ok;
+            response.json().then((res) => {
+                if (success) {
+                }
+            });
+        }
+        updateReport(reportData.id, {
+            project: id,
+            name: reportName,
+            description: reportDescription,
+        });
+    };
     useEffect(() => {
         if (loading) {
             if (id !== undefined) {
                 fetchReport(id);
+                fetchSections(id);
+                fetchFiles(id);
             }
-
+            fetchDataTypes();
             setLoading(false);
         }
         if (id === undefined) {
             setDataLoaded(true);
         } else {
-            if (reportData) {
+            if (reportData && reportSectionsData && files) {
                 setNewReportData(reportData);
+                setReportName(reportData.name);
+                setReportDescription(reportData.description);
+                setSections(reportSectionsData);
+                var buff = JSON.parse(JSON.stringify(reportSectionsData));
+                setOrderedSections(orderSections(buff));
                 setDataLoaded(true);
             }
         }
-    }, [loading]);
+    }, [loading, reportSectionsData, reportData, datatypes, files]);
+
+    let DataContext = {
+        changePosition: changePosition,
+    };
 
     return (
         <Box
@@ -297,8 +493,12 @@ const ReportPage = () => {
                                             type="text"
                                             label="Name"
                                             onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            value={values.name}
+                                            onChange={(event) => {
+                                                setReportName(
+                                                    event.target.value
+                                                );
+                                            }}
+                                            value={reportName}
                                             name="name"
                                             error={
                                                 !!touched.name && !!errors.name
@@ -315,8 +515,12 @@ const ReportPage = () => {
                                             type="text"
                                             label="Description"
                                             onBlur={handleBlur}
-                                            onChange={handleChange}
-                                            value={values.description}
+                                            onChange={(event) => {
+                                                setReportDescription(
+                                                    event.target.value
+                                                );
+                                            }}
+                                            value={reportDescription}
                                             name="description"
                                             error={
                                                 !!touched.description &&
@@ -332,9 +536,74 @@ const ReportPage = () => {
                                 </form>
                             )}
                         </Formik>
-
-                        <Box></Box>
-
+                    </Box>
+                    <Box m=" 20px auto" width="100%">
+                        <Box
+                            width="100%"
+                            display={"flex"}
+                            justifyContent={"space-between"}
+                            alignItems={"center"}
+                        >
+                            <Header
+                                title={"Report Sections"}
+                                subtitle={
+                                    "Drag and drop to change the order, Or click on edit to edit the sections"
+                                }
+                                icon={<ArticleIcon />}
+                            />
+                            <IconButton
+                                onClick={() => {
+                                    createSection({
+                                        report: reportData.id,
+                                        title: "new section",
+                                        order: 1,
+                                        content: null,
+                                        parent: null,
+                                        graph: null,
+                                    });
+                                }}
+                                sx={{
+                                    marginRight: "70px",
+                                    height: "100px",
+                                    width: "100px",
+                                    fontSize: "55px",
+                                    color: colors.indigo[500],
+                                }}
+                            >
+                                <AddToPhotosIcon fontSize="55px" />
+                            </IconButton>
+                        </Box>
+                        <SectionContext.Provider value={DataContext}>
+                            <Box
+                                width="90%"
+                                p="20px"
+                                border="1px solid gray"
+                                borderRadius="5px"
+                                m="40px auto"
+                                height={`${sections.length * 100}px`}
+                            >
+                                <DndProvider backend={HTML5Backend}>
+                                    {orderedSections.map((section) => {
+                                        console.log(orderedSections);
+                                        return (
+                                            <Section
+                                                key={section.id}
+                                                id={section.id}
+                                                project={id}
+                                                title={section.title}
+                                                content={section.content}
+                                                graph={section.graph}
+                                                children={section.children}
+                                                files={files}
+                                                dataTypes={datatypes}
+                                            />
+                                        );
+                                    })}
+                                </DndProvider>
+                            </Box>
+                        </SectionContext.Provider>
+                    </Box>
+                    <Box width="80%" m="auto">
                         {id !== undefined ? (
                             <>
                                 <Box
@@ -364,6 +633,9 @@ const ReportPage = () => {
                                         Cancel
                                     </Button>
                                     <Button
+                                        onClick={() => {
+                                            updateAll();
+                                        }}
                                         type="submit"
                                         color="secondary"
                                         variant="contained"
