@@ -1,0 +1,20 @@
+.login {
+    background-image: url("../images/fond_bateau.JPG");
+    size: 100%;
+    height: 100%;
+}
+
+.nav-link {
+    font-weight: bold !important;
+    -webkit-text-fill-color: #5db2b6;
+    background: #ffffff90 !important;
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    font-size: 25px !important;
+}
+
+.nav-link.active {
+    background: #5db2b6 !important;
+    border-color: #5db2b6 !important;
+    -webkit-text-fill-color: white;
+}
