@@ -119,10 +119,11 @@ export default function AuthProvider({ children }) {
     //the context data passed to the children
     const contextData = {
         //currentUser,
-        user: user,
+        user: user, // to set to use after testing is done
         authTokens: authTokens,
         logIn: logIn,
         logOut: logOut,
+        updateToken: updateToken,
     };
 
     // redering the component

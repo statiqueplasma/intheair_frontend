@@ -1,33 +1,41 @@
-.contact-section{
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+.contact-section {
     text-align: center;
     width: 100%;
     height: 100%;
     position: relative;
 }
-.contact-image{
+.contact-image {
     width: 100%;
     height: 90vh;
     object-fit: cover;
     filter: brightness(0.3);
 }
-.contact-text{
+.contact-text {
     position: absolute;
     top: 55%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     width: 100%;
 }
-.contact-text h1{
+.contact-text h1 {
     font-size: 3rem;
     font-weight: 700;
     color: #fff;
 }
-.contact-text p{
+.contact-text p {
     font-size: 1.3rem;
     color: #fff;
     padding: 2rem 1rem;
 }
-.contact-button{
+.contact-button {
     text-decoration: none;
     background: #fff;
     padding: 1rem 2rem;

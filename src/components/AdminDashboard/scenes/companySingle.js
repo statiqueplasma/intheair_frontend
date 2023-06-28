@@ -24,6 +24,7 @@ import RoomPreferencesIcon from "@mui/icons-material/RoomPreferences";
 import Loading from "../global/loading";
 import Popper from "@mui/material/Popper";
 import Fade from "@mui/material/Fade";
+import { Form } from "react-bootstrap";
 const CompanySingle = () => {
     const initialValues = {
         N_SIRET: "",
@@ -32,6 +33,7 @@ const CompanySingle = () => {
         address: "",
         telephone_number: "",
         activity_sector: "",
+        hubspot_company_id: "",
     };
     const theme = useTheme();
     let navigate = useNavigate();
@@ -43,23 +45,36 @@ const CompanySingle = () => {
         companyData,
         deleteCompanyData,
         createCompany,
+        setResponseStat,
     } = useData();
     const colors = tokens(theme.palette.mode);
     const [loading, setLoading] = useState(true);
     const [formValues, setFormValues] = useState(false);
     const [openPoper, setOpenPoper] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [logo, setLogo] = useState(null);
     const { id } = useParams();
     const isNonMobile = useMediaQuery("(min-width:700px)");
     const handleFormSubmit = (values) => {
         if (id !== undefined) {
             if (values) {
+                values.company_logo = logo;
                 updateCompany({ values, id });
                 console.log(values);
             }
         } else {
             if (values) {
-                createCompany(values);
+                if (logo) {
+                    values.company_logo = logo;
+                    createCompany(values);
+                } else {
+                    setResponseStat({
+                        status: "",
+                        error: "Validation",
+                        keep: "yes",
+                        message: "No Logo selected",
+                    });
+                }
             }
         }
     };
@@ -109,6 +124,7 @@ const CompanySingle = () => {
         legal_name: yup.string().required("Field Required"),
         activity_sector: yup.string().required("Field Required"),
         telephone_number: yup.string().required("Field Required"),
+        hubspot_company_id: yup.string().required("Field Required"),
     });
 
     return (
@@ -272,6 +288,12 @@ const CompanySingle = () => {
                                               companyData.telephone_number,
                                           activity_sector:
                                               companyData.activity_sector,
+                                          activity_sector:
+                                              companyData.activity_sector,
+                                          hubspot_company_id:
+                                              companyData.hubspot_company_id,
+                                          company_logo:
+                                              companyData.company_logo,
                                       }
                                     : initialValues
                             }
@@ -397,6 +419,25 @@ const CompanySingle = () => {
                                         <TextField
                                             fullWidth
                                             variant="filled"
+                                            type="text"
+                                            label="Hubspot Id"
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            value={values.hubspot_company_id}
+                                            name="hubspot_company_id"
+                                            error={
+                                                !!touched.hubspot_company_id &&
+                                                !!errors.hubspot_company_id
+                                            }
+                                            helperText={
+                                                touched.hubspot_company_id &&
+                                                errors.hubspot_company_id
+                                            }
+                                            sx={{ gridColumn: "span 2" }}
+                                        />
+                                        <TextField
+                                            fullWidth
+                                            variant="filled"
                                             select
                                             label="Company Sector"
                                             onBlur={handleBlur}
@@ -428,6 +469,31 @@ const CompanySingle = () => {
                                                 )
                                             )}
                                         </TextField>
+                                        <Form.Group
+                                            controlId="company_logo"
+                                            className="mb-2"
+                                            name="cdc"
+                                        >
+                                            <Form.Label>
+                                                Company Logo
+                                            </Form.Label>
+                                            <Form.Control
+                                                type="file"
+                                                onChange={(e) =>
+                                                    setLogo(e.target.files[0])
+                                                }
+                                                isValid={
+                                                    touched.company_logo &&
+                                                    !errors.company_logo
+                                                }
+                                                isInvalid={
+                                                    !!errors.company_logo
+                                                }
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.company_logo}
+                                            </Form.Control.Feedback>
+                                        </Form.Group>
                                     </Box>
                                     {id !== undefined ? (
                                         <>

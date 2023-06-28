@@ -1,0 +1,67 @@
+.project-container{
+    margin: 80px;    
+}
+
+
+.project-name{
+    
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    font-size: 1.5rem;
+    
+    
+}
+.project-text {
+    align-items: start;
+    display: inline;
+    margin: 25px 0px 0px 15px;
+    
+}
+
+.project-button {
+
+    text-align: end;
+    display: inline;
+    margin: 15px 15px 15px 0px;
+    background-color:#674CC0;
+    color: white;
+    font-weight: 500;
+    
+}
+/* .project-button :hover{
+    color: #674CC0;
+} */
+.project-button:hover {
+    background-color: #fff; /* Couleur de fond inversée */
+    color: #674CC0; /* Couleur du texte inversée */
+  }
+
+  .project-button:hover svg {
+    fill: #674CC0; /* Couleur de l'icône inversée */
+  }
+
+.project-table{
+    
+    padding: 0;
+    opacity: 0.85;
+}
+.file-icon{
+    font-size: 70px;
+    
+}
+
+.project-footer{
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    font-size: 1.5rem;
+    background-color: rgba(145, 195, 214, 0.8);
+} 
+
+.project-footer p{
+    background-color: rgb(122, 182, 206, 0);
+    margin: 15px 10px 15px 15px;
+    font-weight: 500;
+} 
+

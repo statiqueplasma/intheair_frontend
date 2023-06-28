@@ -31,6 +31,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { SectionsTest } from "../test";
 import ArticleIcon from "@mui/icons-material/Article";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
+import { useAuth } from "../../../contexts/AuthContext";
 export const SectionContext = createContext();
 const ReportPage = () => {
     const initialValues = {
@@ -39,7 +40,7 @@ const ReportPage = () => {
         project: "",
     };
     const theme = useTheme();
-
+    const { authTokens } = useAuth();
     const colors = tokens(theme.palette.mode);
     let navigate = useNavigate();
     const {
@@ -65,6 +66,7 @@ const ReportPage = () => {
     const [newReportData, setNewReportData] = useState();
     const [reportName, setReportName] = useState();
     const [reportDescription, setReportDescription] = useState();
+    const [isEditing, setEditing] = useState(false);
     const { id } = useParams();
 
     const isNonMobile = useMediaQuery("(min-width:700px)");
@@ -81,7 +83,6 @@ const ReportPage = () => {
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
         setOpenPoper((openPoper) => !openPoper);
-        console.log(openPoper);
     };
 
     const reportSchema = yup.object().shape({
@@ -99,13 +100,13 @@ const ReportPage = () => {
                     if (array[o].children[i] === object.id) {
                         array[o].children[i] = object;
                         found = true;
-                        array[o].children.sort(function (a, b) {
+                        array[o].children.sort(function(a, b) {
                             return a.order - b.order;
                         });
                         return [array, found];
                     } else if (array[o].children[i].id === object.id) {
                         found = true;
-                        array[o].children.sort(function (a, b) {
+                        array[o].children.sort(function(a, b) {
                             if (a.order && b.order) {
                                 return a.order - b.order;
                             } else return 0;
@@ -122,7 +123,7 @@ const ReportPage = () => {
                     array[o].children = newarr;
                     found = childfound;
                     if (found) {
-                        array[o].children.sort(function (a, b) {
+                        array[o].children.sort(function(a, b) {
                             if (a.order && b.order) {
                                 return a.order - b.order;
                             } else return 0;
@@ -160,14 +161,14 @@ const ReportPage = () => {
                     }
                 }
             }
-            obj.sort(function (a, b) {
+            obj.sort(function(a, b) {
                 if (a.order && b.order) {
                     return a.order - b.order;
                 } else return 0;
             });
             return obj;
         } else {
-            obj.sort(function (a, b) {
+            obj.sort(function(a, b) {
                 if (a.order && b.order) {
                     return a.order - b.order;
                 } else return 0;
@@ -255,13 +256,14 @@ const ReportPage = () => {
             let response = await fetch(`/api/section/${element.id}`, {
                 method: "PUT",
                 headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    report: id,
+                    report: newReportData.id,
                     title: element.title,
                     content: element.content,
-                    graph: element.graph,
+                    graph: element.graph ? element.graph.id : element.graph,
                     order: element.order,
                     parent: element.parent,
                 }),
@@ -273,7 +275,7 @@ const ReportPage = () => {
                 }
             });
         }
-        updateReport(reportData.id, {
+        updateReport(newReportData.id, {
             project: id,
             name: reportName,
             description: reportDescription,
@@ -283,7 +285,7 @@ const ReportPage = () => {
         if (loading) {
             if (id !== undefined) {
                 fetchReport(id);
-                fetchSections(id);
+
                 fetchFiles(id);
             }
             fetchDataTypes();
@@ -292,10 +294,13 @@ const ReportPage = () => {
         if (id === undefined) {
             setDataLoaded(true);
         } else {
-            if (reportData && reportSectionsData && files) {
-                setNewReportData(reportData);
-                setReportName(reportData.name);
-                setReportDescription(reportData.description);
+            if (reportData && !newReportData) {
+                setNewReportData(reportData[0]);
+                setReportName(reportData[0].name);
+                setReportDescription(reportData[0].description);
+                fetchSections(reportData[0].id);
+            }
+            if (reportSectionsData && files) {
                 setSections(reportSectionsData);
                 var buff = JSON.parse(JSON.stringify(reportSectionsData));
                 setOrderedSections(orderSections(buff));
@@ -306,6 +311,8 @@ const ReportPage = () => {
 
     let DataContext = {
         changePosition: changePosition,
+        isEditing: isEditing,
+        setEditing: setEditing,
     };
 
     return (
@@ -554,13 +561,14 @@ const ReportPage = () => {
                             <IconButton
                                 onClick={() => {
                                     createSection({
-                                        report: reportData.id,
+                                        report: newReportData.id,
                                         title: "new section",
                                         order: 1,
                                         content: null,
                                         parent: null,
                                         graph: null,
                                     });
+                                    window.location.reload();
                                 }}
                                 sx={{
                                     marginRight: "70px",
@@ -595,6 +603,7 @@ const ReportPage = () => {
                                                 graph={section.graph}
                                                 children={section.children}
                                                 files={files}
+                                                report={newReportData.id}
                                                 dataTypes={datatypes}
                                             />
                                         );
@@ -652,17 +661,7 @@ const ReportPage = () => {
                                 justifyContent="end"
                                 p="20px"
                                 mt="20px"
-                            >
-                                <Button
-                                    type="submit"
-                                    color="primary"
-                                    variant="contained"
-                                    sx={{ p: "10px 20px" }}
-                                    startIcon={<CreateNewFolderIcon />}
-                                >
-                                    Add project
-                                </Button>
-                            </Box>
+                            ></Box>
                         )}
                     </Box>
                 </>

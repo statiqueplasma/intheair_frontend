@@ -1,7 +1,6 @@
-import { func } from "prop-types";
-import { async } from "q";
 import { useState, createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 const DataContext = createContext();
 
 const defaultUsers = [
@@ -29,7 +28,7 @@ export function useData() {
 }
 
 const DataProvider = ({ children }) => {
-    const [usersData, setUsersData] = useState(defaultUsers);
+    const [usersData, setUsersData] = useState();
     const [userData, setUserData] = useState();
     const [responsStat, setResponseStat] = useState();
     const [companiesData, setCompaniesData] = useState();
@@ -41,14 +40,18 @@ const DataProvider = ({ children }) => {
     const [projecttypesData, setProjecttypesData] = useState();
     const [projecttypeData, setProjecttypeData] = useState();
     const [datatypes, setDataTypes] = useState();
+    const [dataFile, setDataFile] = useState();
+    const [rasterFile, setRasterFile] = useState();
     const [filetypes, setFileTypes] = useState();
     const [fileext, setFileExt] = useState();
     const [reportData, setReportData] = useState();
     const [checkReportData, setCheckReportData] = useState();
     const [sectionData, setSectionData] = useState();
-    const [reportSectionsData, setReportSectionsData] = useState();
     const [filesUploaded, setFileupload] = useState(true);
     const [files, setFiles] = useState();
+    const [droneFields, setDroneFields] = useState();
+    const { authTokens } = useAuth();
+    const [reportSectionsData, setReportSectionsData] = useState();
     let navigate = useNavigate();
     const userTypes = [
         {
@@ -79,6 +82,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch("/api/user/", {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -111,6 +115,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/user/${id}`, {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -139,23 +144,28 @@ const DataProvider = ({ children }) => {
     }
     async function updateUser({ values, id }) {
         // API call with the user creditentials
+        data = {
+            email: values.email,
+            username: values.username,
+            first_name: values.first_name,
+            last_name: values.last_name,
+            telephone_number: values.telephone_number,
+            hubspot_user_id: values.hubspot_user_id,
+            position: values.position,
+            company: values.company,
+            linkedin_url: values.linkedin_url,
+            user_type: values.user_type,
+        };
+        if (values.password) {
+            data["password"] = values.password;
+        }
         let response = await fetch(`/api/user/${id}`, {
             method: "PUT",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                email: values.email,
-                username: values.username,
-                first_name: values.first_name,
-                last_name: values.last_name,
-                telephone_number: values.telephone_number,
-                hubspot_user_id: values.hubspot_user_id,
-                position: values.position,
-                company: values.company,
-                linkedin_url: values.linkedin_url,
-                user_type: values.user_type,
-            }),
+            body: JSON.stringify(data),
         });
         statusCode = response.status;
         error = response.statusText;
@@ -185,6 +195,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/user/`, {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -229,6 +240,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/user/${id}`, {
             method: "DELETE",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         }).then((res) => {
@@ -264,6 +276,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch("/api/company/", {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -294,6 +307,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/company/${id}`, {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -322,18 +336,21 @@ const DataProvider = ({ children }) => {
 
     async function createCompany(values) {
         // API call with the user creditentials
+        const formData = new FormData();
+        formData.append("N_SIRET", values.N_SIRET);
+        formData.append("commercial_name", values.commercial_name);
+        formData.append("legal_name", values.legal_name);
+        formData.append("address", values.address);
+        formData.append("telephone_number", values.telephone_number);
+        formData.append("activity_sector", values.activity_sector);
+        formData.append("company_logo", values.company_logo);
+        formData.append("hubspot_company_id", values.hubspot_company_id);
         let response = await fetch(`/api/company/`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                Authorization: `Bearer ${authTokens.access}`,
             },
-            body: JSON.stringify({
-                name: values.name,
-                description: values.description,
-                hubspot_proj_id: values.hubspot_proj_id,
-                proj_type: values.proj_type,
-                user: values.user,
-            }),
+            body: formData,
         });
         statusCode = response.status;
         error = response.statusText;
@@ -361,18 +378,22 @@ const DataProvider = ({ children }) => {
 
     async function updateCompany({ values, id }) {
         // API call with the user creditentials
+        const formData = new FormData();
+        formData.append("N_SIRET", values.N_SIRET);
+        formData.append("commercial_name", values.commercial_name);
+        formData.append("legal_name", values.legal_name);
+        formData.append("address", values.address);
+        formData.append("telephone_number", values.telephone_number);
+        formData.append("activity_sector", values.activity_sector);
+        if (values.company_logo) {
+            formData.append("company_logo", values.company_logo);
+        }
         let response = await fetch(`/api/company/${id}`, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json",
+                Authorization: `Bearer ${authTokens.access}`,
             },
-            body: JSON.stringify({
-                name: values.name,
-                description: values.description,
-                hubspot_proj_id: values.hubspot_proj_id,
-                proj_type: values.proj_type,
-                user: values.user,
-            }),
+            body: formData,
         });
         statusCode = response.status;
         error = response.statusText;
@@ -400,6 +421,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/company/${id}`, {
             method: "DELETE",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         }).then((res) => {
@@ -435,6 +457,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch("/api/sector/", {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -465,6 +488,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/sector/${id}`, {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -495,6 +519,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/sector/`, {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -529,6 +554,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/sector/${id}`, {
             method: "DELETE",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         }).then((res) => {
@@ -564,6 +590,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch("/api/project/", {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -594,6 +621,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/project/${id}`, {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -622,18 +650,19 @@ const DataProvider = ({ children }) => {
     }
     async function createProject(values) {
         // API call with the user creditentials
+        const formData = new FormData();
+        formData.append("area_file", values.kml_file);
+        formData.append("name", values.name);
+        formData.append("description", values.description);
+        formData.append("hubspot_proj_id", values.hubspot_proj_id);
+        formData.append("proj_type", values.proj_type);
+        formData.append("user", values.user);
         let response = await fetch(`/api/project/`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                Authorization: `Bearer ${authTokens.access}`,
             },
-            body: JSON.stringify({
-                name: values.name,
-                description: values.description,
-                hubspot_proj_id: values.hubspot_proj_id,
-                proj_type: values.proj_type,
-                user: values.user,
-            }),
+            body: formData,
         });
         statusCode = response.status;
         error = response.statusText;
@@ -654,7 +683,7 @@ const DataProvider = ({ children }) => {
                 status: statusCode,
                 error: error,
                 keep: "yes",
-                message: success ? "Projec Created Successfully" : buff,
+                message: success ? "Project Created Successfully" : buff,
             });
         });
     }
@@ -664,6 +693,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/project/${id}`, {
             method: "PUT",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -701,6 +731,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/project/${id}`, {
             method: "DELETE",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         }).then((res) => {
@@ -737,6 +768,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch("/api/projecttype/", {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -768,6 +800,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/projecttype/${id}`, {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -799,6 +832,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/projecttype/`, {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -831,6 +865,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/projecttype/${id}`, {
             method: "DELETE",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         }).then((res) => {
@@ -866,6 +901,43 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/datatype/`, {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
+                "Content-Type": "application/json",
+            },
+        }).then((res) => {
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                fetchProjecttypesData();
+                setResponseStat({
+                    status: "201",
+                    error: null,
+                    keep: "yes",
+                    message: "Project Type Deleted Successfully",
+                });
+            } else {
+                res = res.json();
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+                setResponseStat({
+                    status: statusCode,
+                    error: error,
+                    keep: "yes",
+                    message: buff,
+                });
+            }
+        });
+    }
+    // =====  Data Type for file
+    async function fetchDataTypes() {
+        let response = await fetch(`/api/datatype/`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -906,6 +978,9 @@ const DataProvider = ({ children }) => {
         }
         let response = await fetch(`/api/datatype/`, {
             method: "POST",
+            headers: {
+                Authorization: `Bearer ${authTokens.access}`,
+            },
             body: form,
         });
         statusCode = response.status;
@@ -944,6 +1019,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/datatype/${id}`, {
             method: "DELETE",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         }).then((res) => {
@@ -979,6 +1055,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/filetype/`, {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -1010,6 +1087,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/filetype/`, {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -1042,6 +1120,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/filetype/${id}`, {
             method: "DELETE",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         }).then((res) => {
@@ -1077,6 +1156,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/fileext/`, {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -1108,6 +1188,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/fileext/`, {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -1140,6 +1221,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/fileext/${id}`, {
             method: "DELETE",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         }).then((res) => {
@@ -1175,6 +1257,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/projectfile/${id}`, {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -1188,6 +1271,68 @@ const DataProvider = ({ children }) => {
             if (success) {
                 data = res;
                 setFiles(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: success ? null : "yes",
+                message: success ? "Files Loaded Successfully" : buff,
+            });
+        });
+    }
+    async function fetchData(id) {
+        let response = await fetch(`/api/data/${id}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${authTokens.access}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setDataFile(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: success ? null : "yes",
+                message: success ? "Files Loaded Successfully" : buff,
+            });
+        });
+    }
+    async function fetchRaster(id) {
+        let response = await fetch(`/api/rasterdata/${id}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${authTokens.access}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setRasterFile(data);
             } else {
                 for (var key in res) {
                     buff = buff + `${res[key]} `;
@@ -1215,7 +1360,7 @@ const DataProvider = ({ children }) => {
         }
         let response = await fetch(`/api/projectfile/${obj.project}`, {
             method: "POST",
-            headers: {},
+            headers: { Authorization: `Bearer ${authTokens.access}` },
             body: form,
         });
 
@@ -1246,6 +1391,7 @@ const DataProvider = ({ children }) => {
         let response = fetch(`/api/deleteprojectfile/${id}`, {
             method: "DELETE",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         }).then((res) => {
@@ -1281,6 +1427,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/checkreport/${id}`, {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -1293,24 +1440,20 @@ const DataProvider = ({ children }) => {
         response.json().then((res) => {
             if (success) {
                 data = res;
-                setCheckReportData(data);
+                setCheckReportData(data[0]);
             } else {
                 for (var key in res) {
                     buff = buff + `${res[key]} `;
                 }
+                setCheckReportData(false);
             }
-            setResponseStat({
-                status: statusCode,
-                error: error,
-                keep: success ? null : "yes",
-                message: success ? "Report Loaded Successfully" : buff,
-            });
         });
     }
     async function fetchReport(id) {
-        let response = await fetch(`/api/report/${id}`, {
+        let response = await fetch(`/api/projectreport/${id}`, {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -1332,7 +1475,7 @@ const DataProvider = ({ children }) => {
             setResponseStat({
                 status: statusCode,
                 error: error,
-                keep: success ? null : "yes",
+                keep: null,
                 message: success ? "Report Loaded Successfully" : buff,
             });
         });
@@ -1341,6 +1484,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/report/`, {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -1357,8 +1501,8 @@ const DataProvider = ({ children }) => {
         response.json().then((res) => {
             if (success) {
                 data = res;
+                console.log("report = ", data);
                 setReportData(data);
-                navigate(`/admin/report/${data.id}`);
             } else {
                 for (var key in res) {
                     buff = buff + `${res[key]} `;
@@ -1376,6 +1520,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/report/${id}`, {
             method: "PUT",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -1412,6 +1557,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/sections/${id}`, {
             method: "GET",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
         });
@@ -1442,6 +1588,7 @@ const DataProvider = ({ children }) => {
         let response = await fetch(`/api/sections/${object.report}`, {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -1475,8 +1622,72 @@ const DataProvider = ({ children }) => {
             });
         });
     }
-    async function updateSection(id) {}
-    async function deleteSection(id) {}
+    async function deleteSection(id) {
+        let response = fetch(`/api/section/${id}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${authTokens.access}`,
+                "Content-Type": "application/json",
+            },
+        }).then((res) => {
+            fetchSections();
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                setResponseStat({
+                    status: "201",
+                    error: null,
+                    keep: "yes",
+                    message: "Section Deleted Successfully",
+                });
+            } else {
+                res = res.json();
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+                setResponseStat({
+                    status: statusCode,
+                    error: error,
+                    keep: "yes",
+                    message: buff,
+                });
+            }
+        });
+    }
+    async function fetchDroneFields(id) {
+        let response = await fetch(`/api/dronefields/`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${authTokens.access}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setDroneFields(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: null,
+                message: success ? "Report Loaded Successfully" : buff,
+            });
+        });
+    }
     const contextData = {
         //RESPONSE OBJECT FOR NOTIFS
         setResponseStat: setResponseStat,
@@ -1542,6 +1753,10 @@ const DataProvider = ({ children }) => {
         files: files,
         fetchFiles: fetchFiles,
         deleteProjectFile: deleteProjectFile,
+        dataFile: dataFile,
+        fetchData: fetchData,
+        rasterFile: rasterFile,
+        fetchRaster: fetchRaster,
         // REPORT
         checkReportData: checkReportData,
         reportData: reportData,
@@ -1552,9 +1767,13 @@ const DataProvider = ({ children }) => {
         deleteReport: deleteReport,
         // sections
         fetchSections: fetchSections,
+        deleteSection: deleteSection,
         reportSectionsData: reportSectionsData,
         createSection: createSection,
         sectionData: sectionData,
+        //drones
+        fetchDroneFields: fetchDroneFields,
+        droneFields: droneFields,
     };
     return (
         <DataContext.Provider value={contextData}>

@@ -22,6 +22,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 import SaveIcon from "@mui/icons-material/Save";
+import { useAuth } from "../../../contexts/AuthContext";
+import ReportIcon from "@mui/icons-material/Report";
 const SectionForm = ({
     titlein,
     contentin,
@@ -30,6 +32,7 @@ const SectionForm = ({
     project,
     id,
     dataTypes,
+    report,
 }) => {
     const graphTypes = [
         { value: "DONUT", key: "Donut Graph" },
@@ -38,6 +41,7 @@ const SectionForm = ({
     ];
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const { authTokens } = useAuth();
     const [title, setTitle] = useState(titlein);
     const [content, setContent] = useState(contentin);
     const [projectFile, setProjectFile] = useState(
@@ -65,12 +69,14 @@ const SectionForm = ({
     );
     const [fields, setFields] = useState(get_fields());
     const [graph, setGraph] = useState(graphin ? graphin.id : null);
+    const [ERROR, SETERROR] = useState(null);
+
     var toolbarOptions = [
         ["bold"], // toggled buttons
         ["italic"], // toggled buttons
         ["underline"], // toggled buttons
         ["strike"], // toggled buttons
-
+        [{ size: ["small", false, "large", "huge"] }],
         [{ list: "ordered" }],
         [{ list: "bullet" }],
         [{ script: "sub" }],
@@ -84,6 +90,7 @@ const SectionForm = ({
         [{ font: [] }],
         ["blockquote"],
         ["code-block"],
+        ["link", "image"],
         ["clean"], // remove formatting button
     ];
 
@@ -154,6 +161,7 @@ const SectionForm = ({
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${authTokens.access}`,
             },
             body: JSON.stringify(graph_obj),
         });
@@ -162,6 +170,7 @@ const SectionForm = ({
         response.json().then((res) => {
             if (success) {
                 setGraph(res.id);
+                updateSectionContent();
             }
         });
     };
@@ -169,7 +178,6 @@ const SectionForm = ({
     const updateGraph = async () => {
         let graph_obj = {
             project_file: projectFile,
-            section: [10],
             name: null,
             graph_type: graphType,
             x_label: null,
@@ -196,6 +204,7 @@ const SectionForm = ({
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${authTokens.access}`,
             },
             body: JSON.stringify(graph_obj),
         });
@@ -210,7 +219,7 @@ const SectionForm = ({
     const updateSectionContent = async () => {
         console.log(title);
         let section = {
-            report: project,
+            report: report,
             title: null,
             content: null,
             graph: null,
@@ -228,13 +237,20 @@ const SectionForm = ({
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${authTokens.access}`,
             },
             body: JSON.stringify(section),
         });
-
+        var buff = "";
         var success = response.ok;
         response.json().then((res) => {
             if (success) {
+                window.location.reload();
+            } else {
+                for (var key in res) {
+                    buff = buff + key + " : " + `${res[key]} `;
+                }
+                SETERROR(buff);
             }
         });
     };
@@ -380,14 +396,16 @@ const SectionForm = ({
                                     select
                                     onChange={changeData}
                                 >
-                                    {files.map((option, index) => (
-                                        <MenuItem
-                                            key={option.id}
-                                            value={option}
-                                        >
-                                            {option.name}
-                                        </MenuItem>
-                                    ))}
+                                    {files
+                                        .filter((word) => word.data_type)
+                                        .map((option, index) => (
+                                            <MenuItem
+                                                key={option.id}
+                                                value={option}
+                                            >
+                                                {option.name}
+                                            </MenuItem>
+                                        ))}
                                 </TextField>
                                 <TextField
                                     select
@@ -625,8 +643,45 @@ const SectionForm = ({
                             </Box>
                         </>
                     )}
-                    <Box width="100%">
+                    <Box
+                        width="100%"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="end"
+                    >
+                        {ERROR && (
+                            <Box
+                                width="80%"
+                                height="70px"
+                                p="10px"
+                                display="flex"
+                                alignItems="center"
+                                sx={{
+                                    backgroundColor: "#682727",
+                                    border: "1px solid white",
+                                    borderRadius: "5px",
+                                }}
+                            >
+                                <Typography fontSize="36px" color="#FFBDBD">
+                                    <ReportIcon fontSize="36px" />
+                                </Typography>
+                                <Box ml="10px">
+                                    <Typography
+                                        fontSize="18px"
+                                        fontWeight="bold"
+                                        color="#FFBDBD"
+                                    >
+                                        ERROR:
+                                    </Typography>
+                                    <Typography fontSize="16px" color="#FFBDBD">
+                                        {ERROR}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        )}
+
                         <Box
+                            flex="end"
                             display="flex"
                             justifyContent="end"
                             p="20px"

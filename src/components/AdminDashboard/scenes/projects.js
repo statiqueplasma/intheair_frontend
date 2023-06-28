@@ -635,7 +635,7 @@ const Projects = () => {
                                 },
                             }}
                             onClick={() => {
-                                navigate(`/admin/project/${id}`);
+                                navigate(`/admin/project/${id}`); ////////////////////////////////////////////////////////////////////////////////////
                             }}
                         >
                             <SettingsSuggestIcon fontSize="30px" />
@@ -657,6 +657,7 @@ const Projects = () => {
                         display="flex"
                         flexDirection="column"
                         justifyContent="space-between "
+                        in
                         m="30px 0"
                     >
                         <Box
@@ -690,8 +691,8 @@ const Projects = () => {
                             visibility={visibility}
                             data={projectsData}
                             idParam={(row) => row.id}
-                            paginationModel={{ pageSize: 5, page: 0 }}
-                            pageSizeOptions={[5, 10]}
+                            paginationModel={{ pageSize: 20, page: 0 }}
+                            pageSizeOptions={[10, 20, 40]}
                             components={{ Toolbar: GridToolbar }}
                         />
                     </Box>

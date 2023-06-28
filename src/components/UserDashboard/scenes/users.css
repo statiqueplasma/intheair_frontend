@@ -1,0 +1,103 @@
+.infoClient p {
+    font-size: 1.1rem;
+    font-weight:500;
+}
+
+
+.infoClient {
+    display: grid;
+    grid-template-columns: 20% 40% 40%;
+    margin-top: 50px;
+}
+
+.iconUserPage {
+    align-items: center;
+    text-align: center;
+    margin: 8% 0 0 0;
+    
+     
+}
+
+.infosection {
+    padding-top: 2rem;
+    text-align: start;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.infosection div {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+.infosection p {
+    font-size: 0.9rem;
+}
+
+/* .modifier-button{
+    text-align: center;
+    
+    text-decoration: none;
+    background: #fff;
+    padding: 1rem 30%;
+    border-radius: 6px;
+    border-color: #222;
+    font-size: 1.1rem;
+    color: #222;
+    
+}
+.modifier-button:hover{
+    color: #fff;
+    background-color: grey;
+    transition: all 0.2s;
+    
+}
+.modifier-autour {
+    align-items: center;
+    margin-left: 80px;
+}
+.modifier-autour1 {
+    align-items: center;
+    margin-top: 20px;
+    margin-left: 80px;
+} */
+
+.mailSection {
+    display: grid;
+    grid-template-columns: 20% 40% 40%;
+    
+}
+.mailSection p {
+    font-size: 0.8rem;
+    font-weight:500;
+    
+}
+.iconMail {
+    align-items: center;
+    text-align: center; 
+ 
+}
+
+
+@media screen and (max-width: 1000px){
+    
+    /* .infoClient {
+        display: grid;
+        grid-template-columns: 20% 40%;
+    } */
+    .infosection div{
+        width: 100%;
+    }
+    /* .modifier-button{
+        text-align: center;
+        
+        text-decoration: none;
+        background: #fff;
+        padding: 1rem 100%;
+        border-radius: 6px;
+        border-color: #222;
+        font-size: 1.1rem;
+        color: #222;
+        
+    } */
+}

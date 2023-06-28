@@ -37,6 +37,7 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
     const [load, setload] = useState(true);
     const [openPoper, setOpenPoper] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [deleteid, setDeleteid] = useState(null);
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const { deleteProjectFile } = useData();
@@ -83,9 +84,14 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
         return "none";
     };
 
-    const FolderIcon = (id) => {
-        const label = labelOf(filetypes, id);
-        switch (label.toLowerCase()) {
+    const FolderIcon = (file_type) => {
+        var label = "none";
+        try {
+            label = file_type.toLowerCase();
+        } catch (e) {
+            console.log(e);
+        }
+        switch (label) {
             case "geo_file":
                 return <MapIcon fontSize="inherit" />;
             case "analytics":
@@ -100,9 +106,14 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
                 return <FileCopyIcon fontSize="inherit" />;
         }
     };
-    const FileIcon = (id) => {
-        const label = extOf(extention, id);
-        switch (label.toLowerCase()) {
+    const FileIcon = (file_ext) => {
+        var label = "none";
+        try {
+            label = file_ext.toLowerCase();
+        } catch (e) {
+            console.log(e);
+        }
+        switch (label) {
             case "shapefile":
                 return <TerrainIcon fontSize="inherit" />;
             case "raster":
@@ -150,7 +161,7 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
                 const a = document.createElement("a");
                 a.style.display = "none";
                 a.href = url;
-                a.download = project.name.replace(" ", "_");
+                a.download = `${project.name.replace(" ", "_")}.zip`;
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
@@ -195,7 +206,7 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
                     borderRadius: "7px",
                 }}
             >
-                {files.length > 0 ? (
+                {files && files.length > 0 ? (
                     files.map((file) => {
                         return (
                             <Box key={file.id}>
@@ -267,7 +278,7 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
                                                     <Button
                                                         onClick={() => {
                                                             deleteProjectFile(
-                                                                file.id,
+                                                                deleteid,
                                                                 project.id
                                                             );
                                                             navigate(
@@ -355,6 +366,7 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
                                         display="flex"
                                         onClick={(e) => {
                                             handleClick(e);
+                                            setDeleteid(file.id);
                                         }}
                                     >
                                         <Typography mr="10px">

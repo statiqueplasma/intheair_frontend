@@ -4,25 +4,62 @@ import "leaflet/dist/leaflet.css";
 
 const Map = () => {
     var layer = {};
-    fetch("/api/rasterdata/2");
-    let x = { project_file: "2", raster: "21" };
+    const getPixel = async (x, y) => {
+        let response = await fetch(
+            `/api/raster/pixel/-${x}/${y}?layers=a=36&formula=a`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        var success = response.ok;
+        response.json().then((res) => {
+            if (success) {
+                console.log(res);
+            }
+        });
+    };
+    const get_raster_pixel = async (layer, lat, lon, zoom) => {
+        let response = await fetch(
+            `/api/raster/pixel?layer=${layer}&lat=${lat}&long=${lon}&zoom=${zoom}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        var success = response.ok;
+        response.json().then((res) => {
+            if (success) {
+                console.log(res);
+            }
+        });
+    };
     useEffect(() => {
         // Create a map instance
-        const map = L.map("map", { minZoom: 11, maxZoom: 18 }).setView(
-            [43.51668853502907, 2.08740234375],
+        const map = L.map("map", { maxZoom: 20 }).setView(
+            [43.51454003042543, 2.1007617041350763],
             14
         );
-        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png?{foo}", {
-            foo: "bar",
-            attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        }).addTo(map);
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png"
+        ).addTo(map);
         // Add TMS tile layer to the map
         layer = L.tileLayer(
-            `http://127.0.0.1:8000/api/raster/tiles/5/{z}/{x}/{y}.png`
+            `http://127.0.0.1:8000/api/raster/tiles/15/{z}/{x}/{y}.png`,
+            {}
         );
         layer.addTo(map);
-
+        map.on("click", function(e) {
+            var lat = e.latlng.lat;
+            var lon = e.latlng.lng;
+            get_raster_pixel(3, lat, lon, map.getZoom());
+        });
         return () => {
             // Clean up the map when the component is unmounted
             map.remove();

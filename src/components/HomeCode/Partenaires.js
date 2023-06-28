@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import {Carousel } from "react-bootstrap";
+import { useState } from "react";
+import { Carousel } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import "./PartenairesStyles.css"
+import "./PartenairesStyles.css";
 
 import part1 from "../../images/Partenaires/part1.webp";
 import part2 from "../../images/Partenaires/part2.webp";
@@ -36,185 +36,73 @@ import img2 from "../../images/acc1/img2.webp";
 import img3 from "../../images/acc1/img3.webp";
 function Partenaires() {
     const [index, setIndex] = useState(0);
-  
+
     const handleSelect = (selectedIndex) => {
-      setIndex(selectedIndex);
+        setIndex(selectedIndex);
     };
-  
+
     return (
-      <Carousel activeIndex={index} onSelect={handleSelect}>
-        <Carousel.Item>
-            <>
-                
-                <div className="sectionPartenaires">
-                
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part1} className="partenaires-images" />                          
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part2} className="partenaires-images" />                        
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part3} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part4} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part6} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                </div>
-            </>
-        </Carousel.Item>
-        
-        
-        <Carousel.Item>
-        <>
-                
-                <div className="sectionPartenaires">
-                
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part7} className="partenaires-images" />                          
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part8} className="partenaires-images" />                        
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part9} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part10} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part11} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                </div>
-            </>
-        </Carousel.Item>
-
-        <Carousel.Item>
-        <>
-                
-                <div className="sectionPartenaires">
-                
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part12} className="partenaires-images" />                          
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part13} className="partenaires-images" />                        
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part14} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part15} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part7} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                </div>
-            </>
-        </Carousel.Item>
-
-        {/* <Carousel.Item>
-            <>
-                
-                <div className="sectionPartenaires">
-                
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part26} className="partenaires-images" />                          
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part17} className="partenaires-images" />                        
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part18} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part19} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part20} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                </div>
-            </>
-        </Carousel.Item>
-
-        <Carousel.Item>
-            <>
-                
-                <div className="sectionPartenaires">
-                
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part21} className="partenaires-images" />                          
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part22} className="partenaires-images" />                        
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part23} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part24} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                    <ul className="partenaires">
-                        <div  className="partenaires-case"> 
-                            <img alt="img" src={part25} className="partenaires-images" />                           
-                        </div>
-                    </ul>
-                </div>
-            </>
-        </Carousel.Item> */}
-      </Carousel>
+        <div className="logos">
+            <div className="logos-slide">
+                <img src={part1} alt="img" />
+                <img src={part2} alt="img" />
+                <img src={part3} alt="img" />
+                <img src={part4} alt="img" />
+                <img src={part5} alt="img" />
+                <img src={part6} alt="img" />
+                <img src={part7} alt="img" />
+                <img src={part8} alt="img" />
+                <img src={part9} alt="img" />
+                <img src={part10} alt="img" />
+                <img src={part11} alt="img" />
+                <img src={part12} alt="img" />
+                <img src={part13} alt="img" />
+                <img src={part14} alt="img" />
+                <img src={part15} alt="img" />
+                <img src={part16} alt="img" />
+                <img src={part17} alt="img" />
+                <img src={part18} alt="img" />
+                <img src={part19} alt="img" />
+                <img src={part20} alt="img" />
+                <img src={part21} alt="img" />
+                <img src={part22} alt="img" />
+                <img src={part23} alt="img" />
+                <img src={part24} alt="img" />
+                <img src={part25} alt="img" />
+                <img src={part26} alt="img" />
+                <img src={part27} alt="img" />
+            </div>
+            <div className="logos-slide">
+                <img src={part1} alt="img" />
+                <img src={part2} alt="img" />
+                <img src={part3} alt="img" />
+                <img src={part4} alt="img" />
+                <img src={part5} alt="img" />
+                <img src={part6} alt="img" />
+                <img src={part7} alt="img" />
+                <img src={part8} alt="img" />
+                <img src={part9} alt="img" />
+                <img src={part10} alt="img" />
+                <img src={part11} alt="img" />
+                <img src={part12} alt="img" />
+                <img src={part13} alt="img" />
+                <img src={part14} alt="img" />
+                <img src={part15} alt="img" />
+                <img src={part16} alt="img" />
+                <img src={part17} alt="img" />
+                <img src={part18} alt="img" />
+                <img src={part19} alt="img" />
+                <img src={part20} alt="img" />
+                <img src={part21} alt="img" />
+                <img src={part22} alt="img" />
+                <img src={part23} alt="img" />
+                <img src={part24} alt="img" />
+                <img src={part25} alt="img" />
+                <img src={part26} alt="img" />
+                <img src={part27} alt="img" />
+            </div>
+        </div>
     );
-  }
-  
-  export default Partenaires;
+}
+
+export default Partenaires;

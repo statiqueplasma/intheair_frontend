@@ -69,7 +69,10 @@ const ProjecttypeSingle = () => {
         ) {
             let pass = false;
             for (let i = 0; i < event.files.length; i++) {
-                if (event.files[i].name.split(".")[1] === "shp") {
+                if (
+                    event.files[i].name.split(".")[1] === "shp" ||
+                    event.files[i].name.split(".")[1] === "xlsx"
+                ) {
                     pass = true;
                 }
             }
@@ -80,7 +83,7 @@ const ProjecttypeSingle = () => {
                     status: "",
                     error: "Careful",
                     keep: "yes",
-                    message: "SHP file Missing !",
+                    message: "SHP or XLSX file Missing !",
                 });
             }
         } else {
@@ -347,43 +350,37 @@ const ProjecttypeSingle = () => {
                                                 "& .p-fileupload-buttonbar": {
                                                     background:
                                                         colors.white["700"],
-                                                    borderColor: `${
-                                                        theme.palette.mode ===
-                                                            "dark" &&
+                                                    borderColor: `${theme
+                                                        .palette.mode ===
+                                                        "dark" &&
                                                         colors.black["800"] +
-                                                            " !important"
-                                                    } `,
+                                                            " !important"} `,
                                                 },
-                                                "& .p-fileupload-buttonbar > .p-button":
-                                                    {
-                                                        background:
-                                                            colors.indigo[
-                                                                "500"
-                                                            ],
-                                                    },
+                                                "& .p-fileupload-buttonbar > .p-button": {
+                                                    background:
+                                                        colors.indigo["500"],
+                                                },
                                                 "& .p-fileupload-content": {
                                                     background:
                                                         colors.white["500"],
                                                     color: colors.black["500"],
-                                                    borderColor: `${
-                                                        theme.palette.mode ===
-                                                            "dark" &&
+                                                    borderColor: `${theme
+                                                        .palette.mode ===
+                                                        "dark" &&
                                                         colors.black["800"] +
-                                                            " !important"
-                                                    } `,
+                                                            " !important"} `,
                                                 },
                                                 "& .p-fileupload": {
                                                     border: "0px",
                                                 },
-                                                "& .p-fileupload-buttonbar>.p-disabled":
-                                                    {
-                                                        backgroundColor: `${
-                                                            theme.palette
-                                                                .mode ===
-                                                                "dark" &&
-                                                            colors.white["400"]
-                                                        } !important`,
-                                                    },
+                                                "& .p-fileupload-buttonbar>.p-disabled": {
+                                                    backgroundColor: `${theme
+                                                        .palette.mode ===
+                                                        "dark" &&
+                                                        colors.white[
+                                                            "400"
+                                                        ]} !important`,
+                                                },
                                             }}
                                         >
                                             <Typography
@@ -411,9 +408,10 @@ const ProjecttypeSingle = () => {
                                                                 "center",
                                                             justifyContent:
                                                                 "center",
-                                                            color: colors.black[
-                                                                "500"
-                                                            ],
+                                                            color:
+                                                                colors.black[
+                                                                    "500"
+                                                                ],
                                                         }}
                                                     >
                                                         <Box fontSize="100px">

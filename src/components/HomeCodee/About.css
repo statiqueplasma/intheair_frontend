@@ -1,0 +1,242 @@
+.fonctionnement{
+
+    display: grid;
+    grid-template-columns:  [col1-start] 20% [col2-start] 6% [col3-start] 20% [col4-start] 6% [col5-start] 20% [col6-start] 6% [col4-start]20% [col-end];
+    grid-gap: 0px;
+    list-style: none;
+    align-items: center;
+    margin-top: 50px;
+    padding-bottom: 00px;
+    background-color: white;
+    height: auto;
+    
+}
+.titre1 {
+    
+    text-align: center;
+    padding-top: 150px;
+    border-bottom: 5px solid ;
+    color: #01959a;
+    /* font-weight: bold;
+    font-size: 3rem; */
+    border-color: #674CC0;
+    padding-bottom: 5px;
+}
+  
+.partenaires-case1{
+    padding: 0% 10%;
+    /* margin-top: 40px; */
+    
+    
+}
+.partenaires-case2{
+    font-size: 4rem;
+    color: #674CC0;
+
+}
+.partenaires-images{
+    justify-content: center;
+    height: 100%;
+    width: auto;
+    
+}
+
+
+
+
+
+
+.missions{
+    
+    /* margin-top: 100px; */
+    background-color: #674CC0;
+    
+}
+.missions h1{
+    /* font-size: 3rem;
+    font-weight: bold; */
+    text-align: center;
+    color:white;
+    padding-left: 30%;
+    padding-top: 3%;
+    padding-bottom: 2%;
+    margin-top: 30px;
+    /*border-bottom: 5px solid ;
+    
+     border-color: #01959a;
+    border-left: 5px solid;
+    padding-bottom: 5px; */
+    
+}
+.sous-titre {
+    text-align: center;
+    padding-right: 18%;    
+}
+
+
+.missions p{
+    
+    text-align: center;
+    font-size: 1rem;
+    color: white;
+    padding-left: 30%;
+    padding-right: 0%;
+}
+.missions h4{
+
+    color: white;
+    padding-left: 30%;
+}
+.missions-first-des{
+    display: flex;
+    align-items:center;
+    justify-content: space-between;
+    margin-top: 4.5rem;
+}
+.missions-first-des p{
+    text-align: start;
+}
+.missions-des-text{
+    width: 45%;
+    text-align: start;
+    font-size: 1.1rem;
+}
+.missions-des-text h2{
+    padding-bottom: 1rem;
+}
+.missions-image{
+    
+    position:static;
+    width: 50%;
+    max-width: 700px;
+    display: flex;
+    justify-content: start;
+    z-index: 99;
+    
+}
+.missions-image img{
+
+    width: 70%;
+    height: auto;
+    /* object-fit: cover; */
+    border-radius: 6px;
+    /* box-shadow: -1px 1px 62px -18px rgba(0, 0, 0, 0.19); */
+}
+.missions-image img:nth-child(2){
+    position: absolute;
+    top:-10%;
+    right: 0; 
+}
+.localisation {
+    padding: 5% 10% 10% 10%;
+}
+.localisation h1{
+    text-align: center;
+    
+}
+.loc-case {
+    background-color: green;
+    text-align: center;
+    /* width: 1000px; */
+    height: auto;
+    
+}
+.loc-image {
+    width: auto;
+    /* height: 90%; */
+    text-align: end;
+    /* background-color: blue; */
+    text-align: center;
+}
+.loc-image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 9px;
+    align-items: center;
+    background-color: aqua;
+    /* box-shadow: -1px 1px 62px -18px rgba(0, 0, 0, 0.19); */
+    
+}
+.imgdrone {
+    width: 80%;
+    border-radius: 10px;
+}
+.description {
+    text-align: center;
+}
+.localisation{
+    background-color: white;
+}
+
+@media screen and (max-width: 950px){
+    .missions{
+        margin: 4rem 2rem;
+    }
+    .missions-first-des{
+        display: flex;
+        flex-direction: column-reverse;
+        margin-top: 2.5rem;
+    }
+    .missions-des-text{
+        width: 100%;
+    }
+    .missions-image{
+        width: 100%;
+        /* height: 350px; */
+        margin: 1.8rem 0;
+        /* background-color: azure; */
+        padding-left: 30%;
+    }
+    .missions-image img{
+        height: auto;
+        max-height: 350px;
+        width: auto;
+        /* background-color: aqua; */
+    }
+    .sous-titre {
+    
+        padding-right: 10%;
+        padding-left: 10%;
+    }
+    .sous-titre h1{
+    
+        padding-right: 10%;
+        padding-left: 10%;
+    }
+    .missions p{
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+    .missions h4{
+    
+        padding-right: 10%;
+        padding-left: 10%;
+    }
+
+
+
+
+    .localisation{
+        margin: 4rem 2rem;
+    }
+    .loc-first-des{
+        display: flex;
+        flex-direction: column-reverse;
+        margin-top: 2.5rem;
+    }
+    .loc-des-text{
+        width: 100%;
+    }
+    .loc-image{
+        width: 450px;
+        height: auto;
+        /* margin: 10% 0; */
+    }
+    .loc-image img{
+        height: 350px;
+        text-align: center;
+        padding-right: 19%;
+    }
+
+}

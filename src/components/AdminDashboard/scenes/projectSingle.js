@@ -10,6 +10,7 @@ import {
     IconButton,
     MenuItem,
 } from "@mui/material";
+import { Form } from "react-bootstrap";
 import { Formik } from "formik";
 import { tokens } from "../../../theme";
 import * as yup from "yup";
@@ -39,6 +40,7 @@ const ProjectSingle = () => {
         hubspot_proj_id: "",
         proj_type: "",
         user: "",
+        kml_fiel: "",
     };
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -67,11 +69,13 @@ const ProjectSingle = () => {
         reportData,
         createReport,
         checkForReport,
+        setResponseStat,
     } = useData();
 
     const [loading, setLoading] = useState(true);
     const [formValues, setFormValues] = useState(false);
-    const [raster, setRaster] = useState();
+    const [allowedDataId, setAllowedDataId] = useState();
+    const [kmlFile, setKmlFile] = useState();
     const [openPoper, setOpenPoper] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const { id } = useParams();
@@ -83,7 +87,7 @@ const ProjectSingle = () => {
         project: id,
         uploaded_files: [],
     });
-
+    const allowedDataTypes = ["shapefile", "xlsx", "csv", "kml"];
     const isNonMobile = useMediaQuery("(min-width:700px)");
     let uploadFile = (event) => {
         if (
@@ -93,11 +97,19 @@ const ProjectSingle = () => {
                 fileform.data_type !== "") ||
             (fileform.name !== "" &&
                 fileform.description !== "" &&
-                fileform.file_type === raster)
+                allowedDataId.indexOf(
+                    fileext.find((element) => element.id === fileform.file_type)
+                        .extention
+                ) === -1)
         ) {
             uploadFiles({ ...fileform, uploaded_files: event.files });
+            window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        } else {
+            console.log(
+                "fileform = ",
+                fileext.find((element) => element.id === fileform.file_type)
+            );
         }
-        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     };
     const handleFormSubmit = (values) => {
         if (id !== undefined) {
@@ -106,7 +118,17 @@ const ProjectSingle = () => {
             }
         } else {
             if (values) {
-                createProject(values);
+                if (kmlFile) {
+                    values.kml_file = kmlFile;
+                    createProject(values);
+                } else {
+                    setResponseStat({
+                        status: "",
+                        error: "Validation",
+                        keep: "yes",
+                        message: "No KML File selected",
+                    });
+                }
             }
         }
     };
@@ -155,14 +177,27 @@ const ProjectSingle = () => {
                 files
             ) {
                 setFormValues(true);
+                var ext_array = [];
                 for (let i = 0; i < fileext.length; i++) {
-                    if (fileext[i]["extention"] === "raster") {
-                        setRaster(fileext[i]["id"]);
+                    if (
+                        allowedDataTypes.indexOf(fileext[i]["extention"]) > -1
+                    ) {
+                        ext_array.push(fileext[i]["id"]);
                     }
                 }
+                setAllowedDataId(ext_array);
             }
         }
-    }, [projectData, projecttypesData, loading, filetypes, datatypes, fileext]);
+    }, [
+        projectData,
+        projecttypesData,
+        loading,
+        filetypes,
+        datatypes,
+        fileext,
+        files,
+        usersData,
+    ]);
     const dateFormater = (date) =>
         new Date(date).toDateString() +
         " " +
@@ -277,10 +312,10 @@ const ProjectSingle = () => {
                                                     color={colors.black[500]}
                                                 >
                                                     Are you Sure you want to
-                                                    DELETE This User ("
+                                                    DELETE This Project ("
                                                     {projectData.name}")
                                                     <br />
-                                                    All related projects will be
+                                                    All related Files will be
                                                     Deleted.
                                                 </Typography>
                                                 <Box
@@ -486,6 +521,29 @@ const ProjectSingle = () => {
                                                 </MenuItem>
                                             ))}
                                         </TextField>
+                                        <Form.Group
+                                            controlId="kml_file"
+                                            className="mb-2"
+                                            name="cdc"
+                                        >
+                                            <Form.Label>KML File</Form.Label>
+                                            <Form.Control
+                                                type="file"
+                                                onChange={(e) =>
+                                                    setKmlFile(
+                                                        e.target.files[0]
+                                                    )
+                                                }
+                                                isValid={
+                                                    touched.kml_file &&
+                                                    !errors.kml_file
+                                                }
+                                                isInvalid={!!errors.kml_file}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.kml_file}
+                                            </Form.Control.Feedback>
+                                        </Form.Group>
                                     </Box>
                                     {id !== undefined ? (
                                         <>
@@ -584,7 +642,7 @@ const ProjectSingle = () => {
                             )}
                         </Formik>
                     </Box>
-                    {id !== undefined && (
+                    {id !== undefined && fileext.length && (
                         <Box>
                             {/* File section  */}
 
@@ -615,39 +673,33 @@ const ProjectSingle = () => {
                                         sx={{
                                             "& .p-fileupload-buttonbar": {
                                                 background: colors.white["700"],
-                                                borderColor: `${
-                                                    theme.palette.mode ===
-                                                        "dark" &&
+                                                borderColor: `${theme.palette
+                                                    .mode === "dark" &&
                                                     colors.black["800"] +
-                                                        " !important"
-                                                } `,
+                                                        " !important"} `,
                                             },
-                                            "& .p-fileupload-buttonbar > .p-button":
-                                                {
-                                                    background:
-                                                        colors.indigo["500"],
-                                                },
+                                            "& .p-fileupload-buttonbar > .p-button": {
+                                                background:
+                                                    colors.indigo["500"],
+                                            },
                                             "& .p-fileupload-content": {
                                                 background: colors.white["500"],
                                                 color: colors.black["500"],
-                                                borderColor: `${
-                                                    theme.palette.mode ===
-                                                        "dark" &&
+                                                borderColor: `${theme.palette
+                                                    .mode === "dark" &&
                                                     colors.black["800"] +
-                                                        " !important"
-                                                } `,
+                                                        " !important"} `,
                                             },
                                             "& .p-fileupload": {
                                                 border: "0px",
                                             },
-                                            "& .p-fileupload-buttonbar>.p-disabled":
-                                                {
-                                                    backgroundColor: `${
-                                                        theme.palette.mode ===
-                                                            "dark" &&
-                                                        colors.white["400"]
-                                                    } !important`,
-                                                },
+                                            "& .p-fileupload-buttonbar>.p-disabled": {
+                                                backgroundColor: `${theme
+                                                    .palette.mode === "dark" &&
+                                                    colors.white[
+                                                        "400"
+                                                    ]} !important`,
+                                            },
                                         }}
                                     >
                                         <Typography
@@ -730,8 +782,9 @@ const ProjectSingle = () => {
                                                 variant="filled"
                                                 label="Data Type"
                                                 disabled={
-                                                    fileform.file_type ===
-                                                    raster
+                                                    allowedDataId.indexOf(
+                                                        fileform.file_type
+                                                    ) === -1
                                                 }
                                                 onChange={(e) =>
                                                     setFileform({
@@ -769,9 +822,8 @@ const ProjectSingle = () => {
                                                         alignItems: "center",
                                                         justifyContent:
                                                             "center",
-                                                        color: colors.black[
-                                                            "500"
-                                                        ],
+                                                        color:
+                                                            colors.black["500"],
                                                     }}
                                                 >
                                                     <Box fontSize="100px">
@@ -853,9 +905,7 @@ const ProjectSingle = () => {
                                         </Typography>
                                         <Button
                                             onClick={() => {
-                                                navigate(
-                                                    `/admin/report/${checkReportData.id}`
-                                                );
+                                                navigate(`/admin/report/${id}`);
                                             }}
                                         >
                                             Edit
@@ -886,6 +936,7 @@ const ProjectSingle = () => {
                                                     project: id,
                                                     sections: [],
                                                 });
+                                                navigate(`/admin/report/${id}`);
                                             }}
                                         >
                                             <Typography mr="10px">

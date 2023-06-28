@@ -46,7 +46,8 @@ class Navbare extends Component {
                         );
                     })}
                     {user ? (
-                        user.user_type === "ADMIN" ? (
+                        user.user_type === "ADMIN" ||
+                        user.user_type === "AG_DATA" ? (
                             //if he is an admin we show "Admin Panel" and "logout"
                             <>
                                 <li>

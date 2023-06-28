@@ -1,4 +1,4 @@
-.sectionServices{
+.sectionServices {
     display: grid;
     grid-template-columns: repeat(5, 20%);
     grid-gap: 5px;
@@ -7,47 +7,44 @@
     margin-top: 0px;
     padding-bottom: 50px;
 }
-.border-top1{
-    margin-top: 160px;
+.border-top1 {
+    margin-top: 1800px;
 }
-.servicesTitres{
+.servicesTitres {
     text-align: center;
     padding: 3% 0% 0% 0%;
     color: #01959a;
     font-size: 3rem;
-    
 }
 .services-links {
     font-size: 5em;
     text-decoration: none;
-    color: #674CC0;
+    color: #674cc0;
     font-weight: 600;
     white-space: wrap;
     padding: 100px 0%;
+    /* box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 1); */
 }
-.services-links:hover{
-
+.services-links:hover {
     /* background-color: #01959a; */
     color: #01959a;
     border-radius: 4px;
-    transition: all 0.2s ease-in-out;   
+    transition: all 0.2s ease-in-out;
 }
-.services-text{
+.services-text {
     padding-right: 10px;
     margin-right: 10px;
     line-height: 20px;
-    
+
     text-overflow: ellipsis;
-    
 }
-.case{
+.case {
     padding: 0% 10%;
     margin-top: 40px;
     /* line-height: 100px;    */
 }
-@media screen and (max-width: 950px){
-
-    .sectionServices{
+@media screen and (max-width: 950px) {
+    .sectionServices {
         display: grid;
         grid-template-columns: repeat(3, 34%);
         grid-gap: 5px;
@@ -58,36 +55,36 @@
     }
 }
 
-.contact-section{
+.contact-section {
     text-align: center;
     width: 100%;
     height: 100%;
     position: relative;
 }
-.contact-image{
+.contact-image {
     width: 100%;
     height: 90vh;
     object-fit: cover;
     filter: brightness(0.3);
 }
-.contact-text{
+.contact-text {
     position: absolute;
     top: 55%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     width: 100%;
 }
-.contact-text h1{
+.contact-text h1 {
     font-size: 3rem;
     font-weight: 700;
     color: #fff;
 }
-.contact-text p{
+.contact-text p {
     font-size: 1.3rem;
     color: #fff;
     padding: 2rem 1rem;
 }
-.contact-button{
+.contact-button {
     text-decoration: none;
     background: #fff;
     padding: 1rem 2rem;

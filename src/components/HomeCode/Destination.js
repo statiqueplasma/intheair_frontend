@@ -1,26 +1,37 @@
-import img1 from "./img/1.jpg"
-import img5 from "./img/5.jpg"
-import img3 from "./img/3.jpg"
-import "./DestinationStyles.css"
+import img1 from "./img/1.jpg";
+import img5 from "./img/5.jpg";
+import img3 from "./img/3.jpg";
+import "./DestinationStyles1.css";
 
-const Destination = () =>{
-    return(
+const Destination = () => {
+    return (
         <div className="destination">
-            <h1>Photovoltaïque & Energies Vertes</h1>
-            <p>Tours Gives You The Oportunity</p>
+            <h1>Ceux sont nos clients qui en parlent le mieux </h1>
 
             <div className="first-des">
-                <div className="des-text">
-                    <h2> Tall Volcano Batangas</h2>
-                    <p>Lorem Ipsum ist ein einfacher Demo-Text für die Print- und Schriftindustrie. Lorem Ipsum ist in der Industrie bereits der Standard Demo-Text seit 1500, als ein unbekannter Schriftsteller eine Hand voll Wörter nahm und diese durcheinander warf um ein Musterbuch zu erstellen. Es hat nicht nur 5 Jahrhunderte überlebt, sondern auch in Spruch in die elektronische Schriftbearbeitung geschafft (bemerke, nahezu unverändert). Bekannt wurde es 1960, mit dem erscheinen von "Letraset", welches Passagen von Lorem Ipsum enhielt, so wie Desktop Software wie "Aldus PageMaker" - ebenfalls mit Lorem Ipsum</p>
+                <div className="des-text1">
+                    <p>
+                        Au delà du professionnalisme de l'équipe intheair, ils
+                        ont su apporter une valeur ajoutée dans notre activité
+                        d'exploitation de centrales photovoltaïques à travers un
+                        accompagnement personnalisé et surtout proactif.
+                    </p>
+                    <br></br>
+                    <h5>Abderrhamane Belouard, CEO DAISUN</h5>
+                    <img
+                        alt="img"
+                        src="https://static.wixstatic.com/media/38f406_23bfe8a607b5418f8a34afc1d952f50a~mv2.jpeg/v1/fill/w_157,h_73,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/Daisun.jpeg"
+                    />
                 </div>
-                <div className="image">
-                    <img alt="img" src="https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=872&q=80"/>
-                    <img alt="img" src="https://images.unsplash.com/photo-1562519990-50eb51e282b2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZW9saWVubmV8ZW58MHx8MHx8&auto=format&fit=crop&w=700&q=60"/>
-                    
+                <div className="image1">
+                    <img
+                        alt="img"
+                        src="https://media.licdn.com/dms/image/C4E03AQFaGCzllaBgmg/profile-displayphoto-shrink_800_800/0/1659373148361?e=1689811200&v=beta&t=2hAZMZ0Clxfg2xvgKMJMRbBB6vAhVLvmCzlZRdFDDmw"
+                    />
+                    {/* <img alt="img" src="https://images.unsplash.com/photo-1562519990-50eb51e282b2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZW9saWVubmV8ZW58MHx8MHx8&auto=format&fit=crop&w=700&q=60"/> */}
                 </div>
             </div>
         </div>
-    )
-}
-export default Destination
+    );
+};
+export default Destination;

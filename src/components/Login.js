@@ -77,10 +77,23 @@ function Client() {
 
 function NonClient() {
     const schema = yup.object().shape({
-        email: yup.string().email().required().max(50),
-        prenom: yup.string().required().max(50),
-        nom: yup.string().required().max(50),
-        description: yup.string().required().max(2000),
+        email: yup
+            .string()
+            .email()
+            .required()
+            .max(50),
+        prenom: yup
+            .string()
+            .required()
+            .max(50),
+        nom: yup
+            .string()
+            .required()
+            .max(50),
+        description: yup
+            .string()
+            .required()
+            .max(2000),
         fichier_cdc: yup.object(),
         rendu_autocad: yup.boolean(),
         rendu_sketchup: yup.boolean(),

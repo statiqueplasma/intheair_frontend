@@ -123,10 +123,8 @@ const UserSingle = () => {
                   password: yup.string().required("Field Required"),
                   password_2: yup
                       .string()
-                      .oneOf(
-                          [yup.ref("password"), null],
-                          "Passwords must match"
-                      ),
+                      .oneOf([yup.ref("password")], "Passwords must match")
+                      .required("Field Required"),
                   email: yup
                       .string()
                       .email("Invalid Email Adress")
@@ -149,6 +147,11 @@ const UserSingle = () => {
                   telephone_number: yup.string().required("Field Required"),
                   hubspot_user_id: yup.string().required("Field Required"),
                   position: yup.string().required("Field Required"),
+                  password: yup
+                      .string()
+                      .nullable(true)
+                      .notRequired(),
+                  password_2: yup.string(),
               }
     );
 
@@ -314,6 +317,8 @@ const UserSingle = () => {
                                           linkedin_url: userData.linkedin_url,
                                           company: userData.company,
                                           user_type: userData.user_type,
+                                          password: null,
+                                          password_2: null,
                                       }
                                     : initialValues
                             }
@@ -415,52 +420,49 @@ const UserSingle = () => {
                                             }
                                             sx={{ gridColumn: "span 2" }}
                                         />
-                                        {id === undefined && (
-                                            <>
-                                                <TextField
-                                                    fullWidth
-                                                    variant="filled"
-                                                    type="password"
-                                                    label="Password"
-                                                    onBlur={handleBlur}
-                                                    onChange={handleChange}
-                                                    value={values.password}
-                                                    name="password"
-                                                    error={
-                                                        !!touched.password &&
-                                                        !!errors.password
-                                                    }
-                                                    helperText={
-                                                        touched.password &&
-                                                        errors.password
-                                                    }
-                                                    sx={{
-                                                        gridColumn: "span 2",
-                                                    }}
-                                                />
-                                                <TextField
-                                                    fullWidth
-                                                    variant="filled"
-                                                    type="password"
-                                                    label="Retype Password"
-                                                    onBlur={handleBlur}
-                                                    onChange={handleChange}
-                                                    value={values.password_2}
-                                                    name="password_2"
-                                                    error={
-                                                        !!touched.password_2 &&
-                                                        !!errors.password_2
-                                                    }
-                                                    helperText={
-                                                        touched.password_2 &&
-                                                        errors.password_2
-                                                    }
-                                                    sx={{
-                                                        gridColumn: "span 2",
-                                                    }}
-                                                />
-                                            </>
-                                        )}
+
+                                        <TextField
+                                            fullWidth
+                                            variant="filled"
+                                            type="password"
+                                            label="Password"
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            value={values.password}
+                                            name="password"
+                                            error={
+                                                !!touched.password &&
+                                                !!errors.password
+                                            }
+                                            helperText={
+                                                touched.password &&
+                                                errors.password
+                                            }
+                                            sx={{
+                                                gridColumn: "span 2",
+                                            }}
+                                        />
+                                        <TextField
+                                            fullWidth
+                                            variant="filled"
+                                            type="password"
+                                            label="Retype Password"
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            value={values.password_2}
+                                            name="password_2"
+                                            error={
+                                                !!touched.password_2 &&
+                                                !!errors.password_2
+                                            }
+                                            helperText={
+                                                touched.password_2 &&
+                                                errors.password_2
+                                            }
+                                            sx={{
+                                                gridColumn: "span 2",
+                                            }}
+                                        />
                                         <TextField
                                             fullWidth
                                             variant="filled"
@@ -484,6 +486,7 @@ const UserSingle = () => {
                                             fullWidth
                                             variant="filled"
                                             type="text"
+                                            disabled={id ? false : false}
                                             label="User Hubspot ID"
                                             onBlur={handleBlur}
                                             onChange={handleChange}

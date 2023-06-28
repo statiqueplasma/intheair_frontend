@@ -12,6 +12,7 @@ const Table = ({
     paginationModel,
     pageSizeOptions,
     checkbox = true,
+    addBorder = true,
 }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -33,6 +34,10 @@ const Table = ({
             theme.palette.mode === "light"
                 ? colors.turquoise[500]
                 : colors.indigo[500],
+        border:
+            theme.palette.mode === "light"
+                ? `1px solid #B0B0B0`
+                : `1px solid grey`,
         selectBackground:
             theme.palette.mode === "light"
                 ? `${colors.indigo[700]} !important`
@@ -92,6 +97,9 @@ const Table = ({
                 },
                 "& .MuiDataGrid-toolbarContainer .MuiSvgIcon-root": {
                     color: TabStyle.tools,
+                },
+                "& .MuiDataGrid-cell": {
+                    border: addBorder ? TabStyle.border : "none",
                 },
                 "&  .Mui-selected": {
                     backgroundColor: TabStyle.selectBackground,
