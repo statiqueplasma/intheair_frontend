@@ -13,12 +13,12 @@ import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useData } from "../../../contexts/DataContext";
 
-import "./users.css"
+import "./users.css";
 // import Icon;
-import PersonIcon from '@mui/icons-material/PersonOutline';
-import MailIcon from '@mui/icons-material/MailOutline';
-import LockIcon from '@mui/icons-material/LockOutlined';
-import Pen from '@mui/icons-material/Edit';
+import PersonIcon from "@mui/icons-material/PersonOutline";
+import MailIcon from "@mui/icons-material/MailOutline";
+import LockIcon from "@mui/icons-material/LockOutlined";
+import Pen from "@mui/icons-material/Edit";
 
 import InfoUser from "../global/Modal/InfoUser";
 import MailUser from "../global/Modal/MailUser";
@@ -32,8 +32,9 @@ const Users1 = () => {
     const [loading, setLoading] = useState(true);
     const [dataLoaded, setDataLoaded] = useState(false);
     const { user } = useAuth();
-    const {userData, fetchSingleUserData} = useData()
-    const iconStyle = theme.palette.mode === "light" ? colors.white[500] : colors.black[200];
+    const { userData, fetchSingleUserData } = useData();
+    const iconStyle =
+        theme.palette.mode === "light" ? colors.white[500] : colors.black[200];
     useEffect(() => {
         if (loading) {
             fetchSingleUserData(user.user_id);
@@ -43,7 +44,6 @@ const Users1 = () => {
             setDataLoaded(true);
         }
     }, [userData, loading]);
-
 
     return (
         <Box minHeight="800px" height="100%">
@@ -62,16 +62,13 @@ const Users1 = () => {
                             title="Données personnelles"
                             subtitle="Voir et mettre à jour vos informations ici. Gérez vos identifiants et mots de passe ici."
                         />
-                        
-                        
                     </Box>
 
                     {
-                    
                         <div>
-                            <div className='infoClient' >
+                            <div className="infoClient">
                                 <div className="iconUserPage">
-                                    <PersonIcon style={{ fontSize: '60' }} />                             
+                                    <PersonIcon style={{ fontSize: "60" }} />
                                 </div>
                                 <div className="infosection">
                                     <div>
@@ -103,75 +100,86 @@ const Users1 = () => {
                                         <h5>Linkedin</h5>
                                         <p>{userData.linkedin_url}</p>
                                     </div>
-                                                                        
                                 </div>
 
-                                <InfoUser />
+                                <InfoUser userData={userData} />
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <hr style={{ width: '80%', height: '2px', backgroundColor: colors.black["400"] }} />
-                        </div>
-
-
-                   
-                        <div className='mailSection'>
-
-                            <div className="iconMail">
-                                <MailIcon style={{ fontSize: '55' }} />                             
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <hr
+                                    style={{
+                                        width: "80%",
+                                        height: "2px",
+                                        backgroundColor: colors.black["400"],
+                                    }}
+                                />
                             </div>
 
-                            <div className="mailsection">
-                                <div>
-                                    <h5>Votre adresse e-mail</h5>
-                                    <p>{userData.email}</p>
+                            <div className="mailSection">
+                                <div className="iconMail">
+                                    <MailIcon style={{ fontSize: "55" }} />
                                 </div>
-                            </div>
-                            
-                            <MailUser />
-                                    
-                        </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <hr style={{ width: '80%', height: '2px', backgroundColor: colors.black["400"], }} />
-                        </div>
-
-                        
-                        <div className='mailSection'>
-
-                            <div className="iconMail">
-                                <LockIcon style={{ fontSize: '60' }} />                             
-                            </div>
-
-                            <div className="mailsection">
-                                <div>
-                                    <h5>Votre mot de passe</h5>
-                                    <p>***************</p>
+                                <div className="mailsection">
+                                    <div>
+                                        <h5>Votre adresse e-mail</h5>
+                                        <p>{userData.email}</p>
+                                    </div>
                                 </div>
+
+                                <MailUser />
                             </div>
-                            
-                            <MdpUser />
-                                    
-                        </div>
+
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                <hr
+                                    style={{
+                                        width: "80%",
+                                        height: "2px",
+                                        backgroundColor: colors.black["400"],
+                                    }}
+                                />
+                            </div>
+
+                            <div className="mailSection">
+                                <div className="iconMail">
+                                    <LockIcon style={{ fontSize: "60" }} />
+                                </div>
+
+                                <div className="mailsection">
+                                    <div>
+                                        <h5>Votre mot de passe</h5>
+                                        <p>***************</p>
+                                    </div>
+                                </div>
+
+                                <MdpUser />
+                            </div>
                         </div>
                     }
-                
-             
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <hr style={{ width: '80%', height: '2px', backgroundColor: colors.black["400"], }} />
+
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        <hr
+                            style={{
+                                width: "80%",
+                                height: "2px",
+                                backgroundColor: colors.black["400"],
+                            }}
+                        />
                     </div>
-                    
-
-
-                    
                 </Box>
             ) : (
                 <Loading />
             )}
-            
-
-            
         </Box>
-        
     );
 };
 

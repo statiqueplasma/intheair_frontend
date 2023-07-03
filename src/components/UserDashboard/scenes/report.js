@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useReactToPrint } from "react-to-print";
+import logo from "../../../images/logoBlanc.webp";
 import {
     Box,
     useTheme,
@@ -27,7 +28,7 @@ const ReportPage1 = () => {
     const componentRef = useRef();
     const handleprint = useReactToPrint({
         content: () => componentRef.current,
-        pageStyle: "@page { size: auto;  margin: 20mm; }",
+        pageStyle: "@page { size: auto;  margin: 15mm; }",
     });
     const [loading, setLoading] = useState(true);
     const [dataLoaded, setDataLoaded] = useState(false);
@@ -72,10 +73,119 @@ const ReportPage1 = () => {
                 <Box
                     width="80%"
                     m="auto"
-                    p="70px"
+                    p="50px"
                     sx={{ backgroundColor: "white" }}
                 >
                     <Box ref={componentRef}>
+                        <Box
+                            width={"100%"}
+                            height={"26cm"}
+                            sx={{ backgroundColor: "#7d52b4" }}
+                        >
+                            <Box
+                                display="inline-flex"
+                                width={"100%"}
+                                justifyContent="space-around"
+                                flexWrap="wrap"
+                                alignItems="center"
+                                p="20px"
+                            >
+                                {reportData[0].logos.map((logo) => {
+                                    return (
+                                        <img
+                                            src={logo.logo}
+                                            style={{
+                                                width: "auto",
+                                                height: "80px",
+                                                margin: "5px",
+                                            }}
+                                        />
+                                    );
+                                })}
+                            </Box>
+                            <Box
+                                m="100px auto 0 auto"
+                                display="flex"
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <img
+                                    alt="intheair"
+                                    src={logo}
+                                    width="700px"
+                                    height="auto"
+                                />
+                            </Box>
+                            <Box
+                                width="80%"
+                                display="flex"
+                                justifyContent="center"
+                                height="150px"
+                                border="3px solid white"
+                                m="5px auto 100px auto"
+                                alignItems="center"
+                            >
+                                <Typography
+                                    textAlign="center"
+                                    variant="h4"
+                                    fontWeight="bold"
+                                    color={"white"}
+                                >
+                                    {reportData[0].name}
+                                </Typography>
+                            </Box>
+                            <Box width="80%" m="20px auto 0 auto">
+                                <Box display="flex" width="100%" m="auto">
+                                    <Typography
+                                        variant="h5"
+                                        fontWeight="bold"
+                                        color={"white"}
+                                    >
+                                        Site :
+                                    </Typography>
+                                    <Typography
+                                        color={"white"}
+                                        variant="h6"
+                                        fontWeight="normal"
+                                    >
+                                        {reportData[0].site}
+                                    </Typography>
+                                </Box>
+
+                                <Box display="flex" m="auto" width="100%">
+                                    <Typography
+                                        variant="h5"
+                                        fontWeight="bold"
+                                        color={"white"}
+                                    >
+                                        Adresse :
+                                    </Typography>
+                                    <Typography
+                                        color={"white"}
+                                        variant="h6"
+                                        fontWeight="normal"
+                                    >
+                                        {reportData[0].adresse}
+                                    </Typography>
+                                </Box>
+                                <Box display="flex" m="auto" width="100%">
+                                    <Typography
+                                        variant="h5"
+                                        fontWeight="bold"
+                                        color={"white"}
+                                    >
+                                        Etude réalisé le :
+                                    </Typography>
+                                    <Typography
+                                        color={"white"}
+                                        variant="h6"
+                                        fontWeight="normal"
+                                    >
+                                        {reportData[0].date}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        </Box>
                         <SectionUser sections={reportData[0].sections} />
                     </Box>
                 </Box>

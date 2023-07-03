@@ -34,3 +34,7 @@ html {
     fill: gray !important;
     stroke: none;
 }
+
+.edit-modal-black .modal-content {
+    background-color: rgb(39, 39, 39);
+}

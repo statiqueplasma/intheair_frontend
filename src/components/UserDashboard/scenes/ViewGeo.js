@@ -283,8 +283,12 @@ function GeoData({ id, projectfile, setCenterMap }) {
         }
         setRasters(rast);
         setShapefiles(shape);
-        fetchData(files[shape[0]].id);
-        fetchRaster(files[rast[0]].id);
+        if (shape.length > 0) {
+            fetchData(files[shape[0]].id);
+        }
+        if (rast.length > 0) {
+            fetchRaster(files[rast[0]].id);
+        }
     }
 
     async function get_raster_pixel(layer, lat, lon, zoom) {

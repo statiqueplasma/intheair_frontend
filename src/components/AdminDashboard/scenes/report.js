@@ -2,6 +2,7 @@ import Header from "../global/header";
 import { useState, useEffect, createContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import LinearProgress from "@mui/material/LinearProgress";
 import {
     Box,
     useTheme,
@@ -32,12 +33,19 @@ import { SectionsTest } from "../test";
 import ArticleIcon from "@mui/icons-material/Article";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import { useAuth } from "../../../contexts/AuthContext";
+import { FileUpload } from "primereact/fileupload";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 export const SectionContext = createContext();
 const ReportPage = () => {
     const initialValues = {
         name: "",
         description: "",
         project: "",
+        date: "",
+        site: "",
+        adresse: "",
     };
     const theme = useTheme();
     const { authTokens } = useAuth();
@@ -56,6 +64,9 @@ const ReportPage = () => {
         files,
         fetchFiles,
         updateReport,
+        uploadLogos,
+        deleteLogo,
+        filesUploaded,
     } = useData();
     const [sections, setSections] = useState([]);
     const [orderedSections, setOrderedSections] = useState([]);
@@ -66,6 +77,10 @@ const ReportPage = () => {
     const [newReportData, setNewReportData] = useState();
     const [reportName, setReportName] = useState();
     const [reportDescription, setReportDescription] = useState();
+    const [reportSite, setReportSite] = useState();
+    const [reportAdresse, setReportAdresse] = useState();
+    const [reportLogos, setReportLogos] = useState();
+    const [reportDate, setReportDate] = useState();
     const [isEditing, setEditing] = useState(false);
     const { id } = useParams();
 
@@ -88,8 +103,15 @@ const ReportPage = () => {
     const reportSchema = yup.object().shape({
         name: yup.string().required("Field Required"),
         description: yup.string().required("Field Required"),
+        site: yup.string().required("Field Required"),
+        adresse: yup.string().required("Field Required"),
+        date: yup.date().required("Field Required"),
     });
 
+    let uploadlogo = (event) => {
+        uploadLogos({ report: newReportData.id, uploaded_logos: event.files });
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    };
     const putInChildren = (object, arr) => {
         let array = arr;
 
@@ -279,6 +301,9 @@ const ReportPage = () => {
             project: id,
             name: reportName,
             description: reportDescription,
+            site: reportSite,
+            adresse: reportAdresse,
+            date: reportDate,
         });
     };
     useEffect(() => {
@@ -298,6 +323,10 @@ const ReportPage = () => {
                 setNewReportData(reportData[0]);
                 setReportName(reportData[0].name);
                 setReportDescription(reportData[0].description);
+                setReportAdresse(reportData[0].adresse);
+                setReportSite(reportData[0].site);
+                setReportDate(reportData[0].date);
+                setReportLogos(reportData[0].logos);
                 fetchSections(reportData[0].id);
             }
             if (reportSectionsData && files) {
@@ -323,6 +352,22 @@ const ReportPage = () => {
             height="100%"
             mt="20px"
         >
+            {!filesUploaded && (
+                <Box mt="40px" mb="20px">
+                    <Typography
+                        variant="h4"
+                        fontStyle="oblique"
+                        align="center"
+                        color="primary"
+                        mb="25px"
+                    >
+                        Uploading Your Data...
+                    </Typography>
+                    <Box sx={{ width: "80%", m: "auto" }}>
+                        <LinearProgress />
+                    </Box>
+                </Box>
+            )}
             {dataLoaded ? (
                 <>
                     <Box
@@ -468,6 +513,9 @@ const ReportPage = () => {
                                           name: newReportData.name,
                                           description:
                                               newReportData.description,
+                                          site: newReportData.site,
+                                          date: newReportData.date,
+                                          adresse: newReportData.adresse,
                                       }
                                     : initialValues
                             }
@@ -498,9 +546,10 @@ const ReportPage = () => {
                                             fullWidth
                                             variant="filled"
                                             type="text"
-                                            label="Name"
+                                            label="Title"
                                             onBlur={handleBlur}
                                             onChange={(event) => {
+                                                handleChange(event);
                                                 setReportName(
                                                     event.target.value
                                                 );
@@ -523,6 +572,7 @@ const ReportPage = () => {
                                             label="Description"
                                             onBlur={handleBlur}
                                             onChange={(event) => {
+                                                handleChange(event);
                                                 setReportDescription(
                                                     event.target.value
                                                 );
@@ -539,10 +589,219 @@ const ReportPage = () => {
                                             }
                                             sx={{ gridColumn: "span 4" }}
                                         />
+                                        <TextField
+                                            fullWidth
+                                            variant="filled"
+                                            type="text"
+                                            label="Site"
+                                            onBlur={handleBlur}
+                                            onChange={(event) => {
+                                                handleChange(event);
+                                                setReportSite(
+                                                    event.target.value
+                                                );
+                                            }}
+                                            value={reportSite}
+                                            name="site"
+                                            error={
+                                                !!touched.site && !!errors.site
+                                            }
+                                            helperText={
+                                                touched.site && errors.site
+                                            }
+                                            sx={{ gridColumn: "span 4" }}
+                                        />
+                                        <TextField
+                                            fullWidth
+                                            variant="filled"
+                                            type="text"
+                                            label="Adresse"
+                                            onBlur={handleBlur}
+                                            onChange={(event) => {
+                                                handleChange(event);
+                                                setReportAdresse(
+                                                    event.target.value
+                                                );
+                                            }}
+                                            value={reportAdresse}
+                                            name="adresse"
+                                            error={
+                                                !!touched.adresse &&
+                                                !!errors.adresse
+                                            }
+                                            helperText={
+                                                touched.adresse &&
+                                                errors.adresse
+                                            }
+                                            sx={{ gridColumn: "span 4" }}
+                                        />
+                                        <TextField
+                                            fullWidth
+                                            variant="filled"
+                                            type="date"
+                                            label="Date"
+                                            onBlur={handleBlur}
+                                            onChange={(event) => {
+                                                handleChange(event);
+                                                setReportDate(
+                                                    event.target.value
+                                                );
+                                            }}
+                                            value={reportDate}
+                                            name="date"
+                                            error={
+                                                !!touched.date && !!errors.date
+                                            }
+                                            helperText={
+                                                touched.date && errors.date
+                                            }
+                                            sx={{ gridColumn: "span 4" }}
+                                        />
                                     </Box>
                                 </form>
                             )}
                         </Formik>
+                    </Box>
+                    <Box width="80%" m="auto">
+                        <Typography variant="h5">Logos</Typography>
+                        {reportLogos.length === 0 ? (
+                            <Typography ml="auto" mr="auto" mt="10px" mb="10px">
+                                No Logo
+                            </Typography>
+                        ) : (
+                            <Stack
+                                marginBottom="15px"
+                                marginTop="15px"
+                                direction="row"
+                                spacing={1}
+                            >
+                                {reportLogos.map((logo) => {
+                                    return (
+                                        <Chip
+                                            label={
+                                                logo.logo
+                                                    .split("/")
+                                                    .pop()
+                                                    .substring(0, 10) + "..."
+                                            }
+                                            variant="outlined"
+                                            onDelete={() => {
+                                                setReportLogos(
+                                                    reportLogos.filter(function(
+                                                        arrlogo
+                                                    ) {
+                                                        return (
+                                                            arrlogo.id !==
+                                                            logo.id
+                                                        );
+                                                    })
+                                                );
+                                                deleteLogo(logo.id);
+                                            }}
+                                        />
+                                    );
+                                })}
+                            </Stack>
+                        )}
+                        <Box
+                            sx={{
+                                "& .p-fileupload-buttonbar": {
+                                    background: colors.white["700"],
+                                    borderColor: `${theme.palette.mode ===
+                                        "dark" &&
+                                        colors.black["800"] + " !important"} `,
+                                },
+                                "& .p-fileupload-buttonbar > .p-button": {
+                                    background: colors.indigo["500"],
+                                },
+                                "& .p-fileupload-content": {
+                                    background: colors.white["500"],
+                                    color: colors.black["500"],
+                                    borderColor: `${theme.palette.mode ===
+                                        "dark" &&
+                                        colors.black["800"] + " !important"} `,
+                                },
+                                "& .p-fileupload": {
+                                    border: "0px",
+                                },
+                                "& .p-fileupload-buttonbar>.p-disabled": {
+                                    backgroundColor: `${theme.palette.mode ===
+                                        "dark" &&
+                                        colors.white["400"]} !important`,
+                                },
+                            }}
+                        >
+                            <FileUpload
+                                name="logo"
+                                url={""}
+                                multiple
+                                accept="image/*"
+                                customUpload
+                                uploadHandler={uploadlogo}
+                                emptyTemplate={
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            color: colors.black["500"],
+                                        }}
+                                    >
+                                        <Box fontSize="100px">
+                                            <AddPhotoAlternateIcon fontSize="200px" />
+                                        </Box>
+                                        <p
+                                            style={{
+                                                fontSize: "15px",
+                                            }}
+                                        >
+                                            Choose Images or drag them here to
+                                            upload them
+                                        </p>
+                                    </Box>
+                                }
+                            />
+                            {!filesUploaded && (
+                                <Box
+                                    sx={{
+                                        zIndex: "2000",
+                                        width: "100%",
+                                        margin: "auto",
+                                        height: "95%",
+                                        display: "block",
+                                        position: "absolute",
+                                        backgroundColor: `${
+                                            theme.palette.mode === "light"
+                                                ? colors.black["300"] + 40
+                                                : colors.white["200"] + 40
+                                        }`,
+                                        top: "70px",
+                                        left: "0px",
+                                    }}
+                                >
+                                    <Box mt="200px">
+                                        <Typography
+                                            variant="h4"
+                                            fontStyle="oblique"
+                                            align="center"
+                                            color="primary"
+                                            mb="25px"
+                                        >
+                                            Uploading Your Data...
+                                        </Typography>
+                                        <Box
+                                            sx={{
+                                                width: "80%",
+                                                m: "auto",
+                                            }}
+                                        >
+                                            <LinearProgress />
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            )}
+                        </Box>
                     </Box>
                     <Box m=" 20px auto" width="100%">
                         <Box

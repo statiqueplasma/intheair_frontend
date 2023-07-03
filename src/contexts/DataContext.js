@@ -144,18 +144,27 @@ const DataProvider = ({ children }) => {
     }
     async function updateUser({ values, id }) {
         // API call with the user creditentials
-        data = {
-            email: values.email,
-            username: values.username,
-            first_name: values.first_name,
-            last_name: values.last_name,
-            telephone_number: values.telephone_number,
-            hubspot_user_id: values.hubspot_user_id,
-            position: values.position,
-            company: values.company,
-            linkedin_url: values.linkedin_url,
-            user_type: values.user_type,
-        };
+        var data_in = values.user_type
+            ? {
+                  email: values.email,
+                  username: values.username,
+                  first_name: values.first_name,
+                  last_name: values.last_name,
+                  telephone_number: values.telephone_number,
+                  hubspot_user_id: values.hubspot_user_id,
+                  position: values.position,
+                  company: values.company,
+                  linkedin_url: values.linkedin_url,
+                  user_type: values.user_type,
+              }
+            : {
+                  email: values.email,
+                  username: values.username,
+                  first_name: values.first_name,
+                  last_name: values.last_name,
+                  telephone_number: values.telephone_number,
+                  linkedin_url: values.linkedin_url,
+              };
         if (values.password) {
             data["password"] = values.password;
         }
@@ -165,7 +174,7 @@ const DataProvider = ({ children }) => {
                 Authorization: `Bearer ${authTokens.access}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(data_in),
         });
         statusCode = response.status;
         error = response.statusText;
@@ -269,6 +278,39 @@ const DataProvider = ({ children }) => {
                     message: buff,
                 });
             }
+        });
+    }
+    async function userChangePassword(values) {
+        let response = await fetch(`/api/passwordchange/`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${authTokens.access}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                old_password: values.old_password,
+                new_password: values.new_password,
+            }),
+        });
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: "yes",
+                message: success ? "Password Changed Successfully" : buff,
+            });
         });
     }
     //============= FETCH Companies DATA ================================
@@ -1526,7 +1568,9 @@ const DataProvider = ({ children }) => {
             body: JSON.stringify({
                 project: values.project,
                 name: values.name,
-                description: values.description,
+                adresse: values.adresse,
+                site: values.site,
+                date: values.date,
             }),
         });
         statusCode = response.status;
@@ -1688,6 +1732,78 @@ const DataProvider = ({ children }) => {
             });
         });
     }
+
+    async function uploadLogos(obj) {
+        let form = new FormData();
+        setFileupload(false);
+        form.append("report", obj.report);
+
+        for (let i = 0; i < obj.uploaded_logos.length; i++) {
+            form.append("uploaded_logos", obj.uploaded_logos[i]);
+        }
+        let response = await fetch(`/api/reportlogos/`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${authTokens.access}` },
+            body: form,
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setFileupload(true);
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: "yes",
+                message: success ? "Logos Uploaded Successfully" : buff,
+            });
+        });
+    }
+    async function deleteLogo(id) {
+        let response = fetch(`/api/reportlogos/${id}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${authTokens.access}`,
+                "Content-Type": "application/json",
+            },
+        }).then((res) => {
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                setResponseStat({
+                    status: "201",
+                    error: null,
+                    keep: "yes",
+                    message: "Logo Deleted Successfully",
+                });
+            } else {
+                res = res.json();
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+                setResponseStat({
+                    status: statusCode,
+                    error: error,
+                    keep: "yes",
+                    message: buff,
+                });
+            }
+        });
+    }
+
     const contextData = {
         //RESPONSE OBJECT FOR NOTIFS
         setResponseStat: setResponseStat,
@@ -1701,6 +1817,7 @@ const DataProvider = ({ children }) => {
         updateUser: updateUser,
         createUser: createUser,
         deleteUserData: deleteUserData,
+        userChangePassword: userChangePassword,
         // COMPANY DATA
         companiesData: companiesData,
         companyData: companyData,
@@ -1771,6 +1888,8 @@ const DataProvider = ({ children }) => {
         reportSectionsData: reportSectionsData,
         createSection: createSection,
         sectionData: sectionData,
+        uploadLogos: uploadLogos,
+        deleteLogo: deleteLogo,
         //drones
         fetchDroneFields: fetchDroneFields,
         droneFields: droneFields,

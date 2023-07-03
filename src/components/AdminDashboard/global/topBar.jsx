@@ -35,7 +35,6 @@ const Topbar = () => {
             console.log(responsStat);
 
             if (responsStat.status >= 200 && responsStat.status <= 203) {
-                console.log("pushed to success");
                 if (responsStat.keep !== null) {
                     setSuccess((arr) => [...arr, responsStat]);
                     window.scrollTo({

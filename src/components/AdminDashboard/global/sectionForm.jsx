@@ -24,6 +24,8 @@ import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 import SaveIcon from "@mui/icons-material/Save";
 import { useAuth } from "../../../contexts/AuthContext";
 import ReportIcon from "@mui/icons-material/Report";
+import Graphs from "../../Graphs";
+import { formatData } from "../../Graphs";
 const SectionForm = ({
     titlein,
     contentin,
@@ -601,7 +603,12 @@ const SectionForm = ({
                                                 border: "1px solid gray",
                                                 borderRadius: "5px",
                                             }}
-                                        ></Box>
+                                        >
+                                            <Graphs
+                                                data={graph}
+                                                graph_type={graph.graph_type}
+                                            />
+                                        </Box>
                                     )}
                                     <Box
                                         display="flex"

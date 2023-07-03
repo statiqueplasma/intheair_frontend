@@ -18,6 +18,7 @@ import { FileUpload } from "primereact/fileupload";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import NestedFileBrowser from "../global/filebrowser";
 import LinearProgress from "@mui/material/LinearProgress";
+import major from "../../../images/Major.jpg";
 
 const UserProjectSingle = () => {
     const theme = useTheme();
@@ -92,6 +93,7 @@ const UserProjectSingle = () => {
             minHeight="800px"
             height="100%"
             mt="20px"
+            sx={{ backgroundImage: major }}
         >
             {formValues ? (
                 <>
