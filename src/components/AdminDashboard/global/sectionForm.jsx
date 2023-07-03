@@ -26,6 +26,13 @@ import { useAuth } from "../../../contexts/AuthContext";
 import ReportIcon from "@mui/icons-material/Report";
 import Graphs from "../../Graphs";
 import { formatData } from "../../Graphs";
+
+import { FileUpload } from "primereact/fileupload";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { useData } from "../../../contexts/DataContext";
+
 const SectionForm = ({
     titlein,
     contentin,
@@ -35,6 +42,7 @@ const SectionForm = ({
     id,
     dataTypes,
     report,
+    images
 }) => {
     const graphTypes = [
         { value: "DONUT", key: "Donut Graph" },
@@ -46,6 +54,7 @@ const SectionForm = ({
     const { authTokens } = useAuth();
     const [title, setTitle] = useState(titlein);
     const [content, setContent] = useState(contentin);
+    const [Images, setImages] = useState(images);
     const [projectFile, setProjectFile] = useState(
         graphin ? (graphin.project_file ? graphin.project_file : null) : null
     );
@@ -72,7 +81,7 @@ const SectionForm = ({
     const [fields, setFields] = useState(get_fields());
     const [graph, setGraph] = useState(graphin ? graphin.id : null);
     const [ERROR, SETERROR] = useState(null);
-
+    const {deleteImage, uploadImages} = useData()
     var toolbarOptions = [
         ["bold"], // toggled buttons
         ["italic"], // toggled buttons
@@ -92,10 +101,14 @@ const SectionForm = ({
         [{ font: [] }],
         ["blockquote"],
         ["code-block"],
-        ["link", "image"],
+        ["link"],
         ["clean"], // remove formatting button
     ];
 
+    let uploadImageshandler = (event) => {
+        uploadImages({ section:id, uploaded_images: event.files });
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    };
     const [x_label, setx_label] = useState(
         graphin ? (graphin.x_label ? graphin.x_label : null) : null
     );
@@ -354,6 +367,108 @@ const SectionForm = ({
                         value={content}
                         onChange={setContent}
                     />
+                </Box>
+                <Box>
+                <Typography variant="h5">Images</Typography>
+                        {Images.length === 0 ? (
+                            <Typography ml="auto" mr="auto" mt="10px" mb="10px">
+                                No Image
+                            </Typography>
+                        ) : (
+                            <Stack
+                                marginBottom="15px"
+                                marginTop="15px"
+                                direction="row"
+                                spacing={1}
+                            >
+                                {Images.map((image) => {
+                                    return (
+                                        <Chip
+                                            label={
+                                                image.image
+                                                    .split("/")
+                                                    .pop()
+                                                    .substring(0, 10) + "..."
+                                            }
+                                            variant="outlined"
+                                            onDelete={() => {
+                                                setImages(
+                                                    Images.filter(function(
+                                                        arrimage
+                                                    ) {
+                                                        return (
+                                                            arrimage.id !==
+                                                            image.id
+                                                        );
+                                                    })
+                                                );
+                                                deleteImage(image.id);
+                                            }}
+                                        />
+                                    );
+                                })}
+                            </Stack>
+                        )}
+                        <Box
+                            sx={{
+                                "& .p-fileupload-buttonbar": {
+                                    background: colors.white["700"],
+                                    borderColor: `${theme.palette.mode ===
+                                        "dark" &&
+                                        colors.black["800"] + " !important"} `,
+                                },
+                                "& .p-fileupload-buttonbar > .p-button": {
+                                    background: colors.indigo["500"],
+                                },
+                                "& .p-fileupload-content": {
+                                    background: colors.white["500"],
+                                    color: colors.black["500"],
+                                    borderColor: `${theme.palette.mode ===
+                                        "dark" &&
+                                        colors.black["800"] + " !important"} `,
+                                },
+                                "& .p-fileupload": {
+                                    border: "0px",
+                                },
+                                "& .p-fileupload-buttonbar>.p-disabled": {
+                                    backgroundColor: `${theme.palette.mode ===
+                                        "dark" &&
+                                        colors.white["400"]} !important`,
+                                },
+                            }}
+                        >
+                            <FileUpload
+                                name="logo"
+                                url={""}
+                                multiple
+                                accept="image/*"
+                                customUpload
+                                uploadHandler={uploadImageshandler}
+                                emptyTemplate={
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            color: colors.black["500"],
+                                        }}
+                                    >
+                                        <Box fontSize="100px">
+                                            <AddPhotoAlternateIcon fontSize="200px" />
+                                        </Box>
+                                        <p
+                                            style={{
+                                                fontSize: "15px",
+                                            }}
+                                        >
+                                            Choose Images or drag them here to
+                                            upload them
+                                        </p>
+                                    </Box>
+                                }
+                            />
+                            </Box>
                 </Box>
                 <Box width="100%" mt="20px">
                     <Box display="flex" alignItems="center">
@@ -650,6 +765,8 @@ const SectionForm = ({
                             </Box>
                         </>
                     )}
+                    </Box>
+                    <Box>
                     <Box
                         width="100%"
                         display="flex"

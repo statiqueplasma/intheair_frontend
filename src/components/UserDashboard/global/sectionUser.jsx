@@ -77,6 +77,27 @@ const SectionUser = ({ sections, order = 1, lastPref = null }) => {
                                 graph_type={section.graph.graph_type}
                             />
                         )}
+                        <Box
+                                display="inline-flex"
+                                width={"100%"}
+                                justifyContent="space-around"
+                                flexWrap="wrap"
+                                alignItems="center"
+                                p="20px"
+                            >
+                                {section.images.map((image) => {
+                                    return (
+                                        <img
+                                            src={image.image}
+                                            style={{
+                                                width: "auto",
+                                                height: "120px",
+                                                margin: "10px",
+                                            }}
+                                        />
+                                    );
+                                })}
+                            </Box>
                         {section.children.length > 0 && (
                             <Box ml="35px">
                                 <SectionUser

@@ -89,6 +89,7 @@ const Section = ({
     files,
     dataTypes,
     report,
+    images
 }) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -413,7 +414,7 @@ const Section = ({
                         mt="5px"
                         height="97%"
                         sx={{
-                            bgcolor: `${colors.white[500]}`,
+                            bgcolor: `${colors.white[700]}`,
 
                             border: `1px solid ${colors.indigo[500]}`,
                             borderRadius: "5px",
@@ -477,6 +478,7 @@ const Section = ({
                                     graphin={graph}
                                     report={report}
                                     dataTypes={dataTypes}
+                                    images={images}
                                 />
                             </Box>
                         </Box>

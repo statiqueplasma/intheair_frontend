@@ -112,7 +112,7 @@ const ReportPage1 = () => {
                                 <img
                                     alt="intheair"
                                     src={logo}
-                                    width="700px"
+                                    width="500px"
                                     height="auto"
                                 />
                             </Box>

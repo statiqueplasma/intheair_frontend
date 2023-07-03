@@ -857,6 +857,7 @@ const ReportPage = () => {
                                                 key={section.id}
                                                 id={section.id}
                                                 project={id}
+                                                images = {section.images}
                                                 title={section.title}
                                                 content={section.content}
                                                 graph={section.graph}

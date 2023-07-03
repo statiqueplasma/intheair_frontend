@@ -1803,6 +1803,83 @@ const DataProvider = ({ children }) => {
             }
         });
     }
+    async function uploadImages(obj) {
+        let form = new FormData();
+        setFileupload(false);
+        if(obj.report){
+
+            form.append("report", obj.report);
+        }
+        if(obj.section){
+
+            form.append("section", obj.section);
+        }
+
+        for (let i = 0; i < obj.uploaded_images.length; i++) {
+            form.append("uploaded_images", obj.uploaded_images[i]);
+        }
+        let response = await fetch(`/api/reportimages/`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${authTokens.access}` },
+            body: form,
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setFileupload(true);
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: "yes",
+                message: success ? "Images Uploaded Successfully" : buff,
+            });
+        });
+    }
+    async function deleteImage(id) {
+        let response = fetch(`/api/reportimages/${id}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${authTokens.access}`,
+                "Content-Type": "application/json",
+            },
+        }).then((res) => {
+            statusCode = res.status;
+            error = res.statusText;
+            success = res.ok;
+            data = {};
+            buff = "";
+            if (success || statusCode === 204) {
+                setResponseStat({
+                    status: "201",
+                    error: null,
+                    keep: "yes",
+                    message: "Image Deleted Successfully",
+                });
+            } else {
+                res = res.json();
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+                setResponseStat({
+                    status: statusCode,
+                    error: error,
+                    keep: "yes",
+                    message: buff,
+                });
+            }
+        });
+    }
 
     const contextData = {
         //RESPONSE OBJECT FOR NOTIFS
@@ -1890,6 +1967,8 @@ const DataProvider = ({ children }) => {
         sectionData: sectionData,
         uploadLogos: uploadLogos,
         deleteLogo: deleteLogo,
+        uploadImages:uploadFiles,
+        deleteImage:deleteImage,
         //drones
         fetchDroneFields: fetchDroneFields,
         droneFields: droneFields,
