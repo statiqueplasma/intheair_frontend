@@ -28,7 +28,15 @@ const ReportPage1 = () => {
     const componentRef = useRef();
     const handleprint = useReactToPrint({
         content: () => componentRef.current,
-        pageStyle: "@page { size: auto;  margin: 15mm; }",
+        pageStyle: `@page { size: auto;  margin: 15mm; }
+        @media print {
+            .page-break {
+              margin-top: 1rem;
+              display: block;
+              page-break-before: auto;
+            }
+          }
+          `,
     });
     const [loading, setLoading] = useState(true);
     const [dataLoaded, setDataLoaded] = useState(false);
@@ -71,15 +79,16 @@ const ReportPage1 = () => {
 
             {dataLoaded ? (
                 <Box
-                    width="80%"
+                    width="23.5cm"
                     m="auto"
                     p="50px"
                     sx={{ backgroundColor: "white" }}
                 >
                     <Box ref={componentRef}>
                         <Box
-                            width={"100%"}
-                            height={"26cm"}
+                            width="21cm"
+                            height={"29.7cm"}
+                            mb="50px"
                             sx={{ backgroundColor: "#7d52b4" }}
                         >
                             <Box
@@ -104,7 +113,7 @@ const ReportPage1 = () => {
                                 })}
                             </Box>
                             <Box
-                                m="100px auto 0 auto"
+                                m="40px auto 0 auto"
                                 display="flex"
                                 justifyContent="center"
                                 alignItems="center"
@@ -112,28 +121,59 @@ const ReportPage1 = () => {
                                 <img
                                     alt="intheair"
                                     src={logo}
-                                    width="500px"
+                                    width="70%"
                                     height="auto"
                                 />
                             </Box>
                             <Box
-                                width="80%"
+                                position="relative"
                                 display="flex"
                                 justifyContent="center"
-                                height="150px"
-                                border="3px solid white"
-                                m="5px auto 100px auto"
-                                alignItems="center"
+                                mt="40px"
                             >
-                                <Typography
-                                    textAlign="center"
-                                    variant="h4"
-                                    fontWeight="bold"
-                                    color={"white"}
+                                <Box
+                                    width="70%"
+                                    display="flex"
+                                    position="absolute"
+                                    justifyContent="center"
+                                    minHeight="150px"
+                                    border="3px solid white"
+                                    m="auto"
+                                    alignItems="center"
+                                    zIndex={5}
+                                    sx={{
+                                        backgroundColor: "#7d52b4",
+                                    }}
                                 >
-                                    {reportData[0].name}
-                                </Typography>
+                                    <Typography
+                                        textAlign="center"
+                                        variant="h4"
+                                        fontWeight="bold"
+                                        color={"white"}
+                                    >
+                                        {reportData[0].name}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    m="70px auto 20px auto"
+                                    display="flex"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    width="90%"
+                                    height="450px"
+                                >
+                                    <img
+                                        alt="intheair"
+                                        src={reportData[0].image.image}
+                                        width="90%"
+                                        height="100%"
+                                        style={{
+                                            objectFit: "cover",
+                                        }}
+                                    />
+                                </Box>
                             </Box>
+
                             <Box width="80%" m="20px auto 0 auto">
                                 <Box display="flex" width="100%" m="auto">
                                     <Typography

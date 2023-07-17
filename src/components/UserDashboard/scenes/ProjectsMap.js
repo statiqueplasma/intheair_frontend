@@ -22,7 +22,7 @@ function onEachFeatureProject(feature, layer, projectData) {
         return text;
     }
 
-    layer.bindPopup(readProperties(feature)).on("add", function() {
+    layer.bindPopup(readProperties(feature)).on("add", function () {
         layer.openPopup();
     });
 
@@ -69,12 +69,8 @@ function onEachFeatureDrone(feature, layer) {
 
 function GeoData() {
     const map = useMap();
-    const {
-        projectsData,
-        fetchProjectsData,
-        droneFields,
-        fetchDroneFields,
-    } = useData();
+    const { projectsData, fetchProjectsData, droneFields, fetchDroneFields } =
+        useData();
     const [loading, setLoading] = useState(true);
     const [addOverlays, setAddOverlays] = useState(true);
 
@@ -98,7 +94,6 @@ function GeoData() {
                     "Zones de vol réglementées"
                 );
                 for (let project in projectsData) {
-                    console.log(projectsData[project].delimitation_field);
                     let layerProjects = L.geoJSON(
                         projectsData[project].delimitation_field.features,
                         {

@@ -52,6 +52,7 @@ const DataProvider = ({ children }) => {
     const [droneFields, setDroneFields] = useState();
     const { authTokens } = useAuth();
     const [reportSectionsData, setReportSectionsData] = useState();
+    const [layerOrder, setLayerOrder] = useState();
     let navigate = useNavigate();
     const userTypes = [
         {
@@ -565,7 +566,8 @@ const DataProvider = ({ children }) => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                label: values.label,
+                activity_sector: values.activity_sector,
+                description: values.description,
             }),
         });
         statusCode = response.status;
@@ -577,7 +579,6 @@ const DataProvider = ({ children }) => {
             if (success) {
                 data = res;
                 setSectorData(data);
-                navigate(`/admin/projects/`);
             } else {
                 for (var key in res) {
                     buff = buff + `${res[key]} `;
@@ -1464,6 +1465,74 @@ const DataProvider = ({ children }) => {
             }
         });
     }
+    async function fetchLayerOrder(id) {
+        let response = await fetch(`/api/layerorder/${id}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${authTokens.access}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+                setLayerOrder(data);
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: success ? null : "yes",
+                message: success ? "Layer Order Loaded Successfully" : buff,
+            });
+        });
+    }
+    async function updateLayerOrder(values) {
+        // API call with the user creditentials
+        let response = await fetch(
+            `/api/setlayerorder/${values.project_file}`,
+            {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${authTokens.access}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    project_file: values.project_file,
+                    order: values.order,
+                }),
+            }
+        );
+        statusCode = response.status;
+        error = response.statusText;
+        success = response.ok;
+        data = {};
+        buff = "";
+        response.json().then((res) => {
+            if (success) {
+                data = res;
+            } else {
+                for (var key in res) {
+                    buff = buff + `${res[key]} `;
+                }
+            }
+            setResponseStat({
+                status: statusCode,
+                error: error,
+                keep: success ? null : "yes",
+                message: !success && buff,
+            });
+        });
+    }
     // ======= Report
     async function checkForReport(id) {
         let response = await fetch(`/api/checkreport/${id}`, {
@@ -1806,12 +1875,10 @@ const DataProvider = ({ children }) => {
     async function uploadImages(obj) {
         let form = new FormData();
         setFileupload(false);
-        if(obj.report){
-
+        if (obj.report) {
             form.append("report", obj.report);
         }
-        if(obj.section){
-
+        if (obj.section) {
             form.append("section", obj.section);
         }
 
@@ -1951,6 +2018,9 @@ const DataProvider = ({ children }) => {
         fetchData: fetchData,
         rasterFile: rasterFile,
         fetchRaster: fetchRaster,
+        fetchLayerOrder: fetchLayerOrder,
+        layerOrder: layerOrder,
+        updateLayerOrder: updateLayerOrder,
         // REPORT
         checkReportData: checkReportData,
         reportData: reportData,
@@ -1967,8 +2037,8 @@ const DataProvider = ({ children }) => {
         sectionData: sectionData,
         uploadLogos: uploadLogos,
         deleteLogo: deleteLogo,
-        uploadImages:uploadFiles,
-        deleteImage:deleteImage,
+        uploadImages: uploadImages,
+        deleteImage: deleteImage,
         //drones
         fetchDroneFields: fetchDroneFields,
         droneFields: droneFields,

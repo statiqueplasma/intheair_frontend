@@ -1,14 +1,16 @@
 import { Container, Navbar } from "react-bootstrap";
 import logo from "../images/logoBlanc.webp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { Button } from "@mui/material";
+import Login from "./Login";
 
 function BarreViolette() {
     const violet = "#674CC0";
     const vert = "#60B4B8";
 
     const { user, logOut } = useAuth();
-
+    const navigate = useNavigate();
     const navBarStyle = {
         backgroundColor: user
             ? user.user_type === "ADMIN" || user.user_type === "AG_DATA"
@@ -22,8 +24,8 @@ function BarreViolette() {
         textDecoration: "none",
         fontWeight: "bold",
         float: "left",
-        paddingLeft: 10,
-        paddingRight: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
     };
     const navLinksStyleHover = {
         color: "#60B4B8",
@@ -40,6 +42,8 @@ function BarreViolette() {
             : vert,
         float: "left",
         fontWeight: "bold",
+        fontSize: "16px",
+        margin: "10px",
     };
 
     return (
@@ -61,12 +65,18 @@ function BarreViolette() {
                         color: "white",
                         textDecoration: "none",
                         display: "inline-block",
+                        alignItems: "center",
                     }}
                 >
-                    <Link style={navLinksStyle} to="/">
+                    <Button
+                        onClick={() => navigate("/")}
+                        variant="contained"
+                        size="medium"
+                        style={{ margin: "10px" }}
+                    >
                         Home
-                    </Link>
-                    <span style={navLinkSeparatorStyle}> | </span>
+                    </Button>
+                    {/* <span style={navLinkSeparatorStyle}> | </span> */}
 
                     {/* if the user is logged in we show the respective userpage button*/}
                     {user ? (
@@ -74,31 +84,56 @@ function BarreViolette() {
                         user.user_type === "AG_DATA" ? (
                             //if he is an admin we show "Admin Panel" and "logout"
                             <div style={{ float: "right" }}>
-                                <Link style={navLinksStyle} to="/admin">
+                                <Button
+                                    onClick={() => navigate("/admin")}
+                                    variant="contained"
+                                    size="medium"
+                                    style={{ margin: "10px" }}
+                                >
                                     Admin Panel
-                                </Link>
-                                <span style={navLinkSeparatorStyle}> | </span>
-                                <p style={navLinksStyle} onClick={logOut}>
+                                </Button>
+                                {/* <span style={navLinkSeparatorStyle}> | </span> */}
+                                <Button
+                                    onClick={() => navigate("/logout")}
+                                    variant="contained"
+                                    size="medium"
+                                    style={{ margin: "10px" }}
+                                >
                                     Logout
-                                </p>
+                                </Button>
                             </div>
                         ) : (
                             //if he is a normal user we show "Dashboard" and "logout"
                             <div style={{ float: "right" }}>
-                                <Link style={navLinksStyle} to="/dashboard">
+                                <Button
+                                    onClick={() => navigate("/dashboard")}
+                                    variant="contained"
+                                    size="medium"
+                                    style={{ margin: "10px" }}
+                                >
                                     Dashboard
-                                </Link>
-                                <span style={navLinkSeparatorStyle}> | </span>
-                                <a style={navLinksStyle} onClick={logOut}>
+                                </Button>
+                                {/* <span style={navLinkSeparatorStyle}> | </span> */}
+                                <Button
+                                    onClick={() => logOut()}
+                                    variant="contained"
+                                    size="medium"
+                                    style={{ margin: "10px" }}
+                                >
                                     Logout
-                                </a>
+                                </Button>
                             </div>
                         )
                     ) : (
                         //if not logged in we only show him the "Login" button"
-                        <Link style={navLinksStyle} to="/login">
+                        <Button
+                            onClick={() => navigate("/login")}
+                            variant="contained"
+                            size="medium"
+                            style={{ margin: "10px" }}
+                        >
                             Login
-                        </Link>
+                        </Button>
                     )}
                 </div>
             </Container>

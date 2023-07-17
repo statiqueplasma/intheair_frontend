@@ -30,7 +30,8 @@ import { useNavigate } from "react-router-dom";
 import DoNotDisturbAltIcon from "@mui/icons-material/DoNotDisturbAlt";
 import LayersIcon from "@mui/icons-material/Layers";
 import FolderOffIcon from "@mui/icons-material/FolderOff";
-
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
     let navigate = useNavigate();
     const [toggles, setToggles] = useState({});
@@ -341,6 +342,13 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
                                         }
                                         secondary={file.last_edit}
                                     />
+                                    {!file.processed ? (
+                                        <CheckCircleOutlineIcon
+                                            style={{ color: "gray" }}
+                                        />
+                                    ) : (
+                                        <CheckCircleIcon />
+                                    )}
                                     <Button
                                         p="10px"
                                         height="50px"

@@ -23,7 +23,7 @@ import "../styles/Login.css";
 import Navbare from "./HomeCode/Navbare";
 function Client() {
     let navigate = useNavigate();
-    const { user, logIn } = useAuth();
+    const { user, logIn, sendDevis } = useAuth();
 
     //if the user is already logged in, we send the user to his respective userpage
     useEffect(() => {
@@ -76,25 +76,14 @@ function Client() {
 }
 
 function NonClient() {
+    const { sendDevis } = useAuth();
     const schema = yup.object().shape({
-        email: yup
-            .string()
-            .email()
-            .required()
-            .max(50),
-        prenom: yup
-            .string()
-            .required()
-            .max(50),
-        nom: yup
-            .string()
-            .required()
-            .max(50),
-        description: yup
-            .string()
-            .required()
-            .max(2000),
+        email: yup.string().email().required().max(50),
+        prenom: yup.string().required().max(50),
+        nom: yup.string().required().max(50),
+        description: yup.string().required().max(2000),
         fichier_cdc: yup.object(),
+        fichier_kml: yup.object(),
         rendu_autocad: yup.boolean(),
         rendu_sketchup: yup.boolean(),
         rendu_qgis: yup.boolean(),
@@ -102,13 +91,40 @@ function NonClient() {
         commentaires: yup.string().max(2000),
     });
 
-    function handleSubmit(contacts) {
-        console.log(contacts);
+    const [cahierDeCharge, setCahierDeCharge] = useState();
+    const [kmlFile, setKmlFile] = useState();
+    function handleSubmitDevis(contacts) {
+        var rendu_list = {
+            rendu_autocad: contacts.rendu_autocad,
+            rendu_qgis: contacts.rendu_qgis,
+            rendu_sketchup: contacts.rendu_sketchup,
+            rendu_autre: contacts.rendu_autre,
+        };
+        var return_obj = {
+            email: contacts.email,
+            last_name: contacts.nom,
+            first_name: contacts.prenom,
+            description: contacts.description,
+            specification_file: cahierDeCharge,
+            comments: contacts.commentaires,
+            kml_file: kmlFile,
+            rendu: "",
+        };
+        for (var key in rendu_list) {
+            if (rendu_list[key]) {
+                return_obj.rendu = return_obj.rendu + " | " + key;
+            }
+        }
+        sendDevis(return_obj);
+        console.log(return_obj);
+    }
+    function handleSubmitEmail(contacts) {
+        //sendDevis(contacts)
     }
 
     return (
         <Container style={{ paddingTop: "2%", paddingBottom: "2%" }}>
-            <Row>
+            <Row style={{ width: "100%" }}>
                 <Col style={{ marginRight: "7%", borderRight: "2px solid" }}>
                     <div className="text-center">
                         <h4 style={{ color: "#674CC0" }}>
@@ -124,7 +140,7 @@ function NonClient() {
                     </div>
                     <Formik
                         validationSchema={schema}
-                        onSubmit={handleSubmit}
+                        onSubmit={handleSubmitEmail}
                         initialValues={{
                             email: "",
                             contenu_mail: "",
@@ -212,7 +228,7 @@ function NonClient() {
 
                     <Formik
                         validationSchema={schema}
-                        onSubmit={handleSubmit}
+                        onSubmit={handleSubmitDevis}
                         initialValues={{
                             email: "",
                             prenom: "",
@@ -337,7 +353,12 @@ function NonClient() {
                                         <Form.Control
                                             type="file"
                                             value={values.fichier_cdc}
-                                            onChange={handleChange}
+                                            onChange={(e) => {
+                                                handleChange(e);
+                                                setCahierDeCharge(
+                                                    e.target.files[0]
+                                                );
+                                            }}
                                             isValid={
                                                 touched.fichier_cdc &&
                                                 !errors.fichier_cdc
@@ -346,6 +367,33 @@ function NonClient() {
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             {errors.fichier_cdc}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                    <Form.Group
+                                        controlId="formkml"
+                                        className="mb-2"
+                                        name="kml"
+                                    >
+                                        <Form.Label>
+                                            <strong>
+                                                Déposer votre fichier KML
+                                            </strong>
+                                        </Form.Label>
+                                        <Form.Control
+                                            type="file"
+                                            value={values.fichier_kml}
+                                            onChange={(e) => {
+                                                handleChange(e);
+                                                setKmlFile(e.target.files[0]);
+                                            }}
+                                            isValid={
+                                                touched.fichier_kml &&
+                                                !errors.fichier_kml
+                                            }
+                                            isInvalid={!!errors.fichier_kml}
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.fichier_kml}
                                         </Form.Control.Feedback>
                                     </Form.Group>
 
@@ -466,12 +514,25 @@ function Login() {
     const handleShow = () => setShow(true);
 
     return (
-        <>
+        <div
+            style={{
+                width: "100%",
+                height: "1200px",
+            }}
+        >
             <Navbare />
-            <div className="login" style={{ height: "100%" }}>
+            <div
+                className="login"
+                style={{
+                    height: "100%",
+                    margin: "auto",
+                    display: "flex",
+                    alignContent: "center",
+                }}
+            >
                 <Container
-                    style={{ paddingTop: "10%" }}
-                    className="d-flex align-items-center justify-content-center"
+                    style={{ paddingTop: "10%", height: "100%" }}
+                    className="login-container d-flex align-items-center justify-content-center"
                 >
                     {/* <Bouton onClick={handleShow}>test modal</Bouton>
 			<ModalError show={show} setShow={setShow}/> */}
@@ -500,7 +561,7 @@ function Login() {
                     </Stack>
                 </Container>
             </div>
-        </>
+        </div>
     );
 }
 

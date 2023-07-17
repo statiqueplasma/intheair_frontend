@@ -67,6 +67,7 @@ const ReportPage = () => {
         uploadLogos,
         deleteLogo,
         filesUploaded,
+        uploadImages,
     } = useData();
     const [sections, setSections] = useState([]);
     const [orderedSections, setOrderedSections] = useState([]);
@@ -80,6 +81,7 @@ const ReportPage = () => {
     const [reportSite, setReportSite] = useState();
     const [reportAdresse, setReportAdresse] = useState();
     const [reportLogos, setReportLogos] = useState();
+    const [reportImage, setReportImage] = useState();
     const [reportDate, setReportDate] = useState();
     const [isEditing, setEditing] = useState(false);
     const { id } = useParams();
@@ -111,6 +113,14 @@ const ReportPage = () => {
     let uploadlogo = (event) => {
         uploadLogos({ report: newReportData.id, uploaded_logos: event.files });
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        window.location.reload();
+    };
+    let uploadImageReport = (event) => {
+        uploadImages({
+            report: newReportData.id,
+            uploaded_images: event.files,
+        });
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     };
     const putInChildren = (object, arr) => {
         let array = arr;
@@ -122,13 +132,13 @@ const ReportPage = () => {
                     if (array[o].children[i] === object.id) {
                         array[o].children[i] = object;
                         found = true;
-                        array[o].children.sort(function(a, b) {
+                        array[o].children.sort(function (a, b) {
                             return a.order - b.order;
                         });
                         return [array, found];
                     } else if (array[o].children[i].id === object.id) {
                         found = true;
-                        array[o].children.sort(function(a, b) {
+                        array[o].children.sort(function (a, b) {
                             if (a.order && b.order) {
                                 return a.order - b.order;
                             } else return 0;
@@ -145,7 +155,7 @@ const ReportPage = () => {
                     array[o].children = newarr;
                     found = childfound;
                     if (found) {
-                        array[o].children.sort(function(a, b) {
+                        array[o].children.sort(function (a, b) {
                             if (a.order && b.order) {
                                 return a.order - b.order;
                             } else return 0;
@@ -183,14 +193,14 @@ const ReportPage = () => {
                     }
                 }
             }
-            obj.sort(function(a, b) {
+            obj.sort(function (a, b) {
                 if (a.order && b.order) {
                     return a.order - b.order;
                 } else return 0;
             });
             return obj;
         } else {
-            obj.sort(function(a, b) {
+            obj.sort(function (a, b) {
                 if (a.order && b.order) {
                     return a.order - b.order;
                 } else return 0;
@@ -327,6 +337,7 @@ const ReportPage = () => {
                 setReportSite(reportData[0].site);
                 setReportDate(reportData[0].date);
                 setReportLogos(reportData[0].logos);
+                setReportImage(reportData[0].image);
                 fetchSections(reportData[0].id);
             }
             if (reportSectionsData && files) {
@@ -663,7 +674,9 @@ const ReportPage = () => {
                         </Formik>
                     </Box>
                     <Box width="80%" m="auto">
-                        <Typography variant="h5">Logos</Typography>
+                        <Typography fontWeight="bold" variant="h5" m="10px">
+                            Logos :
+                        </Typography>
                         {reportLogos.length === 0 ? (
                             <Typography ml="auto" mr="auto" mt="10px" mb="10px">
                                 No Logo
@@ -687,14 +700,14 @@ const ReportPage = () => {
                                             variant="outlined"
                                             onDelete={() => {
                                                 setReportLogos(
-                                                    reportLogos.filter(function(
-                                                        arrlogo
-                                                    ) {
-                                                        return (
-                                                            arrlogo.id !==
-                                                            logo.id
-                                                        );
-                                                    })
+                                                    reportLogos.filter(
+                                                        function (arrlogo) {
+                                                            return (
+                                                                arrlogo.id !==
+                                                                logo.id
+                                                            );
+                                                        }
+                                                    )
                                                 );
                                                 deleteLogo(logo.id);
                                             }}
@@ -707,9 +720,10 @@ const ReportPage = () => {
                             sx={{
                                 "& .p-fileupload-buttonbar": {
                                     background: colors.white["700"],
-                                    borderColor: `${theme.palette.mode ===
-                                        "dark" &&
-                                        colors.black["800"] + " !important"} `,
+                                    borderColor: `${
+                                        theme.palette.mode === "dark" &&
+                                        colors.black["800"] + " !important"
+                                    } `,
                                 },
                                 "& .p-fileupload-buttonbar > .p-button": {
                                     background: colors.indigo["500"],
@@ -717,17 +731,19 @@ const ReportPage = () => {
                                 "& .p-fileupload-content": {
                                     background: colors.white["500"],
                                     color: colors.black["500"],
-                                    borderColor: `${theme.palette.mode ===
-                                        "dark" &&
-                                        colors.black["800"] + " !important"} `,
+                                    borderColor: `${
+                                        theme.palette.mode === "dark" &&
+                                        colors.black["800"] + " !important"
+                                    } `,
                                 },
                                 "& .p-fileupload": {
                                     border: "0px",
                                 },
                                 "& .p-fileupload-buttonbar>.p-disabled": {
-                                    backgroundColor: `${theme.palette.mode ===
-                                        "dark" &&
-                                        colors.white["400"]} !important`,
+                                    backgroundColor: `${
+                                        theme.palette.mode === "dark" &&
+                                        colors.white["400"]
+                                    } !important`,
                                 },
                             }}
                         >
@@ -802,6 +818,64 @@ const ReportPage = () => {
                                 </Box>
                             )}
                         </Box>
+                        <Box></Box>
+                        <Typography fontWeight="bold" variant="h5" m="20px">
+                            Front Page Image
+                        </Typography>
+                        <Box
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="start"
+                            width="50%"
+                        >
+                            <Box
+                                mr="20px"
+                                sx={{
+                                    "& .p-fileupload-buttonbar": {
+                                        background: colors.white["700"],
+                                        borderColor: `${
+                                            theme.palette.mode === "dark" &&
+                                            colors.black["800"] + " !important"
+                                        } `,
+                                    },
+                                    "& .p-fileupload-buttonbar > .p-button": {
+                                        background: colors.indigo["500"],
+                                    },
+                                    "& .p-fileupload-content": {
+                                        background: colors.white["500"],
+                                        color: colors.black["500"],
+                                        borderColor: `${
+                                            theme.palette.mode === "dark" &&
+                                            colors.black["800"] + " !important"
+                                        } `,
+                                    },
+                                    "& .p-fileupload": {
+                                        border: "0px",
+                                    },
+                                    "& .p-fileupload-buttonbar>.p-disabled": {
+                                        backgroundColor: `${
+                                            theme.palette.mode === "dark" &&
+                                            colors.white["400"]
+                                        } !important`,
+                                    },
+                                }}
+                            >
+                                <FileUpload
+                                    mode="basic"
+                                    accept="image/*"
+                                    maxFileSize={1000000}
+                                    customUpload
+                                    uploadHandler={uploadImageReport}
+                                />
+                            </Box>
+                            {!reportImage ? (
+                                <Typography>No Image</Typography>
+                            ) : (
+                                <Typography>
+                                    {reportImage.image.split("/").pop()}
+                                </Typography>
+                            )}
+                        </Box>
                     </Box>
                     <Box m=" 20px auto" width="100%">
                         <Box
@@ -857,7 +931,7 @@ const ReportPage = () => {
                                                 key={section.id}
                                                 id={section.id}
                                                 project={id}
-                                                images = {section.images}
+                                                images={section.images}
                                                 title={section.title}
                                                 content={section.content}
                                                 graph={section.graph}

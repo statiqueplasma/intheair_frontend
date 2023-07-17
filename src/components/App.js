@@ -59,6 +59,7 @@ import Cgve from "./HomeCodee/Cgve";
 import Logout from "./Routes/Logout";
 import Map from "./AdminDashboard/scenes/testRaster";
 import ProjectsMap from "./UserDashboard/scenes/ProjectsMap";
+import MapView from "./UserDashboard/scenes/mapview";
 function App() {
     const [theme, colorMode] = useMode();
     const user = localStorage.getItem("authToken");
@@ -96,6 +97,7 @@ function App() {
                                 />
                                 ///////////////////////////////English//////////////////////////////////////
                                 <Route path="/homee" element={<Homee />} />
+                                <Route path="/testmap" element={<MapView />} />
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/logout" element={<Logout />} />
                                 {/* <Route path="/test" element={<Test />} /> */}

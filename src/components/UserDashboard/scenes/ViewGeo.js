@@ -137,14 +137,8 @@ function GeoData({ id, projectfile, setCenterMap }) {
         fillOpacity: 0.3,
     };
 
-    const {
-        files,
-        fetchFiles,
-        dataFile,
-        fetchData,
-        rasterFile,
-        fetchRaster,
-    } = useData();
+    const { files, fetchFiles, dataFile, fetchData, rasterFile, fetchRaster } =
+        useData();
     const [loading, setLoading] = useState(true);
     const [endLoop, setEndLoop] = useState(false);
     const [layerControl, setLayerControl] = useState();
@@ -176,7 +170,7 @@ function GeoData({ id, projectfile, setCenterMap }) {
         if (dataFile) {
             setLoadingState(true);
             let layer = L.geoJSON(dataFile, {
-                pointToLayer: function(feature, latlng) {
+                pointToLayer: function (feature, latlng) {
                     return L.circleMarker(latlng, geojsonMarkerOptions);
                 },
                 onEachFeature: onEachFeature,
@@ -212,7 +206,7 @@ function GeoData({ id, projectfile, setCenterMap }) {
                 `http://127.0.0.1:8000/api/raster/tiles/${rasterFile[0].raster}/{z}/{x}/{y}.png`,
                 { maxZoom: 21, nativeZooms: [18, 19, 20, 21] }
             );
-            map.on("click", function(e) {
+            map.on("click", function (e) {
                 get_raster_pixel(
                     rasterFile[0].raster,
                     e.latlng.lat,
@@ -349,20 +343,7 @@ function ViewGeo() {
         completedColor: "#9b2d14",
     };
     return (
-        <Box width="95%" m="auto">
-            <Stack direction="horizontal" gap={5}>
-                <h1>Projet n°{id}</h1>
-                <div className="ms-auto">
-                    <Bouton
-                        onClick={() => navigate("/")}
-                        couleurFond={"#674CC0"}
-                        couleurTexte={"white"}
-                    >
-                        <strong>Retour à l'accueil</strong>
-                    </Bouton>
-                </div>
-            </Stack>
-
+        <Box width="100%" height="100%" m="auto" p="5px">
             <MapContainer center={center} zoom={14}>
                 <ChangeView center={center} zoom={14} />
                 {/* <MeasureControl

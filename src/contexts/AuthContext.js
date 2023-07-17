@@ -96,6 +96,38 @@ export default function AuthProvider({ children }) {
         }
     };
 
+    // Contact
+    async function sendDevis(values) {
+        // API call with the user creditentials
+        const formData = new FormData();
+        formData.append("email", values.email);
+        formData.append("last_name", values.last_name);
+        formData.append("first_name", values.first_name);
+        formData.append("description", values.description);
+        formData.append("rendu", values.rendu);
+        formData.append("specification_file", values.specification_file);
+        formData.append("comments", values.comments);
+        formData.append("kml_file", values.kml_file);
+        let response = await fetch(`/api/contact/devis/`, {
+            method: "POST",
+            body: formData,
+        });
+        // statusCode = response.status;
+        // error = response.statusText;
+        // success = response.ok;
+        // data = {};
+        // buff = "";
+        response.json().then((res) => {
+            // if (success) {
+            //     data = res;
+            // } else {
+            //     for (var key in res) {
+            //         buff = buff + `${res[key]} `;
+            //     }
+            // }
+        });
+    }
+
     useEffect(() => {
         if (loading) {
             //update the token when the page is loaded
@@ -124,6 +156,7 @@ export default function AuthProvider({ children }) {
         logIn: logIn,
         logOut: logOut,
         updateToken: updateToken,
+        sendDevis: sendDevis,
     };
 
     // redering the component

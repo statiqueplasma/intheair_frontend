@@ -54,15 +54,18 @@ const SectionUser = ({ sections, order = 1, lastPref = null }) => {
 
                 return (
                     <Box width="100%" color="black">
-                        <Typography
-                            fontSize={
-                                order < 3
-                                    ? `${35 - order * 5}px`
-                                    : `${35 - 15}px`
-                            }
-                        >
-                            {pref} - {section.title}
-                        </Typography>
+                        {section.title && (
+                            <Typography
+                                fontSize={
+                                    order < 3
+                                        ? `${35 - order * 5}px`
+                                        : `${35 - 15}px`
+                                }
+                            >
+                                {pref} - {section.title}
+                            </Typography>
+                        )}
+
                         <Box
                             ml="15px"
                             textAlign={"justify"}
@@ -78,26 +81,26 @@ const SectionUser = ({ sections, order = 1, lastPref = null }) => {
                             />
                         )}
                         <Box
-                                display="inline-flex"
-                                width={"100%"}
-                                justifyContent="space-around"
-                                flexWrap="wrap"
-                                alignItems="center"
-                                p="20px"
-                            >
-                                {section.images.map((image) => {
-                                    return (
-                                        <img
-                                            src={image.image}
-                                            style={{
-                                                width: "auto",
-                                                height: "120px",
-                                                margin: "10px",
-                                            }}
-                                        />
-                                    );
-                                })}
-                            </Box>
+                            display="inline-flex"
+                            width={"100%"}
+                            justifyContent="space-around"
+                            flexWrap="wrap"
+                            alignItems="center"
+                            p="20px"
+                        >
+                            {section.images.map((image) => {
+                                return (
+                                    <img
+                                        src={image.image}
+                                        style={{
+                                            width: "40%",
+                                            height: "auto",
+                                            margin: "10px",
+                                        }}
+                                    />
+                                );
+                            })}
+                        </Box>
                         {section.children.length > 0 && (
                             <Box ml="35px">
                                 <SectionUser

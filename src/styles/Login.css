@@ -1,8 +1,6 @@
 .login {
     background-image: url("../images/fond_bateau.JPG");
-    size: 100%;
-    height: auto;
-    object-fit: fill;
+    background-size: cover;
 }
 
 .nav-link {
