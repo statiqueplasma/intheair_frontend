@@ -126,6 +126,15 @@ function App() {
                                         element={<UserRoute />}
                                     />
                                     <Route
+                                        path="/mapview/:id"
+                                        element={<MapView />}
+                                    >
+                                        <Route
+                                            path="/mapview/:id/:projectfile"
+                                            element={<MapView />}
+                                        />
+                                    </Route>
+                                    <Route
                                         path="/dashboard"
                                         element={<Dashboard />}
                                     >
@@ -155,15 +164,7 @@ function App() {
                                                 element={<UserProjectSingle />}
                                             />
                                         </Route>
-                                        <Route
-                                            path="/dashboard/viewgeo/:id"
-                                            element={<ViewGeo />}
-                                        >
-                                            <Route
-                                                path="/dashboard/viewgeo/:id/:projectfile"
-                                                element={<ViewGeo />}
-                                            />
-                                        </Route>
+
                                         <Route
                                             path="/dashboard/analytics/:id/:file_name"
                                             element={<Analytics />}

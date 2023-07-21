@@ -37,7 +37,6 @@ function Dashboard() {
     return (
         //<Graphs graph_type={"LineChart"} data={LineChartSample} />
         <ProSidebarProvider>
-            <BarreViolette />
             <div style={{ display: "flex", height: "100%" }}>
                 <Sidebar logo={companyData ? companyData.company_logo : null} />
                 <div
@@ -46,10 +45,9 @@ function Dashboard() {
                         flexDirection: "column",
                         width: "100%",
                         height: "100%",
+                        marginTop: "5vh",
                     }}
                 >
-                    <Topbar />
-                    {/* <ProjectsGeoData/> */}
                     <Outlet
                         style={{
                             flex: "right",

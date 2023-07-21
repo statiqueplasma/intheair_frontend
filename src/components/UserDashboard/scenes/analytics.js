@@ -46,7 +46,7 @@ function Analytics() {
                 setLoadData(true);
             }
         }
-    });
+    },[loading, dataFile]);
     var data_type_buff = "data_type";
     var file_name_buff = "file_name";
     if (data_type) data_type_buff = data_type;

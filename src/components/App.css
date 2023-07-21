@@ -24,3 +24,34 @@ html {
     font-family: "Montserrat";
     src: local("Montserrat"), url(../fonts/Montserrat-VariableFont_wght.ttf);
 }
+
+.popup-table {
+    width: 100%;
+    border: 1px solid #eeeeee;
+}
+
+.popup-table-header {
+    display: flex;
+    width: 100%;
+    background: #000;
+    padding: 18px 0;
+}
+
+.popup-table-row {
+    display: flex;
+    width: 100%;
+    padding: 18px 0;
+}
+.popup-table-row:nth-of-type(odd) {
+    background: gray;
+}
+
+.pupup-table-data,
+.pupup-header__item {
+    flex: 1 1 20%;
+    text-align: center;
+}
+
+.pupup-header__item {
+    text-transform: uppercase;
+}

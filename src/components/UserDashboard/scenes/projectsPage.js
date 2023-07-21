@@ -19,6 +19,7 @@ const UserProjects = () => {
     const { projectsData, fetchProjectsData } = useData();
     const [loading, setLoading] = useState(true);
     const [dataLoaded, setDataLoaded] = useState(false);
+    const [center, setCenter] = useState();
     const iconStyle =
         theme.palette.mode === "light" ? colors.white[500] : colors.black[200];
     useEffect(() => {
@@ -36,10 +37,10 @@ const UserProjects = () => {
             {dataLoaded ? (
                 <>
                     <Box height={"80%"} width={"93%"}>
-                        <ProjectsMap />
+                        <ProjectsMap centerIn={center}/>
                     </Box>
                     <div className="projectbar-container">
-                        <ProjectBar projectItem={projectsData} />
+                        <ProjectBar projectItem={projectsData} setCenter={(center)=>setCenter(center)} />
                     </div>
                 </>
             ) : (

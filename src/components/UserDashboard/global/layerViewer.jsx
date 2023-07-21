@@ -1,6 +1,8 @@
 import L, { divIcon } from "leaflet";
 import { GeoJSON } from "react-leaflet";
 import { useEffect, useState, useF } from "react";
+import PopupTable from "./popupTable";
+
 const Vectorfiltering = (element, prop, operator, value) => {
     if (operator === "sup") {
         if (
@@ -31,15 +33,25 @@ const Vectorfiltering = (element, prop, operator, value) => {
     }
 };
 
-function onEachFeature(feature, layer) {
-    function readProperties(feature) {
-        let text = '<b style="font-size:15px;}">' + "Propreties" + "</b><hr>";
-        for (let [key, value] of Object.entries(feature.properties)) {
-            text += "<b>" + key + " : </b>" + value + "</br>";
+function readProperties(feature) {
+    let text =
+        '<table  id="popup-prop"><thead><tr>' +
+        '<th style={{ margin: "5px" }}>Element </th>' +
+        '<th style={{ margin: "5px" }}>Valeur</th>' +
+        "</tr></thead><tbody>";
+    for (let [key, value] of Object.entries(feature.properties)) {
+        if (key !== "project_file" && key !== "id") {
+            const newkey = key.replace("_", " ");
+            text += "<tr><td>" + newkey + "</td><td>" + value + "</td></tr>";
         }
-        return text;
     }
+    text += " </tbody></table>";
+    //console.log(text_object);
+    return text;
+}
 
+function onEachFeature(feature, layer) {
+    //layer.bindPopup(PopupTable(feature.properties), {className: "popup-proprety"});
     layer.bindPopup(readProperties(feature));
 
     layer.on({
@@ -56,14 +68,6 @@ function onEachFeature(feature, layer) {
     });
 }
 function onEachFeatureLine(feature, layer, show, filterObject) {
-    function readProperties(feature) {
-        let text = '<b style="font-size:15px;}">' + "Propreties" + "</b><hr>";
-        for (let [key, value] of Object.entries(feature.properties)) {
-            text += "<b>" + key + " : </b>" + value + "</br>";
-        }
-        return text;
-    }
-
     layer.bindPopup(readProperties(feature));
 
     if (filterObject.active) {
@@ -75,7 +79,7 @@ function onEachFeatureLine(feature, layer, show, filterObject) {
                 filterObject.value
             )
         ) {
-            layer.setStyle({ fillColor: "red" });
+            layer.setStyle({ color: "red" });
         } else {
             if (filterObject.show) {
                 layer.setStyle(null);
@@ -139,14 +143,21 @@ const LayerViewer = ({ layer, index, filterObject }) => {
                                               geojsonFilteredMarkerOptions
                                           );
                                       } else {
-                                          return L.circleMarker(latlng, {
-                                              radius: 10,
-                                              fillColor: layer.color,
-                                              color: layer.color,
-                                              weight: 1,
-                                              opacity: 1,
-                                              fillOpacity: 0.3,
-                                          });
+                                          if (filterObject.show) {
+                                              return L.circleMarker(latlng, {
+                                                  radius: 10,
+                                                  fillColor: layer.color,
+                                                  color: layer.color,
+                                                  weight: 1,
+                                                  opacity: 1,
+                                                  fillOpacity: 0.3,
+                                              });
+                                          } else {
+                                              return L.circleMarker(
+                                                  latlng,
+                                                  geojsonMarkerHidden
+                                              );
+                                          }
                                       }
                                   } else {
                                       return L.circleMarker(latlng, {

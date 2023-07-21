@@ -2,23 +2,23 @@
     width: 100%;
     height: 100vh;
     display: flex;
-    justify-content: flex-end;  
+    justify-content: flex-end;
 }
 .projectbar-container {
     align-self: flex-end;
 }
-  
+
 main {
     width: 100%;
     padding: 0px;
 }
 
 .container {
-    display:flex;
+    display: flex;
 }
 
 .projectbar {
-    background: #00000015;
+    background: #8e8e8e23;
     box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 1);
     color: #0e0101;
     height: 100vh;
@@ -27,15 +27,14 @@ main {
 }
 .top_section {
     display: flex;
-    align-items:center;
-    padding:10px 10px;
+    align-items: center;
+    padding: 10px 10px;
 }
 .logo {
     font-size: 30px;
     width: 100vw;
     height: 100%;
     padding: 5% 20% 0 0;
-
 }
 /* .fleches {
     font-size:  60px;
@@ -46,9 +45,9 @@ main {
 .fleches {
     margin: 20px 0% 0% 10px;
     display: flex;
-    
+
     align-items: center;
-    width: 5vw;    
+    width: 5vw;
 }
 .link {
     display: flex;
@@ -59,7 +58,7 @@ main {
     text-decoration: none;
 }
 .link:hover {
-    background:rgba(1, 13, 20, 0.123);
+    background: rgba(1, 13, 20, 0.123);
     color: #000;
     transition: all 0.5s;
 }
@@ -67,7 +66,8 @@ main {
     background: rgba(1, 13, 20, 0.082);
     color: #000;
 }
-.icon, .link_text {
+.icon,
+.link_text {
     font-size: 20px;
-    color: #674CC0;
+    color: #674cc0;
 }

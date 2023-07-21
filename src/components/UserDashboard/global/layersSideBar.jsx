@@ -16,6 +16,7 @@ import {
     Checkbox,
     Button,
     Tooltip,
+    Slide,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { tokens } from "../../../theme";
@@ -40,7 +41,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useDrag, useDrop } from "react-dnd";
-
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 function useForceUpdate() {
     const [value, setValue] = useState(0); // integer state
     return () => setValue((value) => value + 1); // update state to force render
@@ -103,6 +104,7 @@ function LayerItem({
     setfilterObject,
     filterIndex,
     FilterValues,
+    AllowChangeView,
 }) {
     const forceUpdate = useForceUpdate();
     const uniqueOptions =
@@ -175,16 +177,19 @@ function LayerItem({
                     <Tooltip title="Zoomer sur La Layer">
                         <IconButton
                             size="small"
-                            onClick={() =>
-                                layer.type === "raster"
-                                    ? changeCenter([
-                                          layer.data.lat,
-                                          layer.data.lon,
-                                      ])
-                                    : changeCenter(
-                                          layer.data.features[0].geometry.coordinates[0].toReversed()
-                                      )
-                            }
+                            onClick={() => {
+                                AllowChangeView();
+                                if (layer.type === "raster") {
+                                    changeCenter([
+                                        layer.data.lat,
+                                        layer.data.lon,
+                                    ]);
+                                } else {
+                                    changeCenter(
+                                        layer.data.features[0].geometry.coordinates[0].toReversed()
+                                    );
+                                }
+                            }}
                         >
                             <ZoomInIcon fontSize="14px" />
                         </IconButton>
@@ -423,7 +428,7 @@ function getUniqueOptions(opts) {
     return arr;
 }
 
-const LayerSideBar = () => {
+const LayerSideBar = ({ collapse, setCollapse, setAllowChangeView }) => {
     const { collapseSidebar, toggleSidebar, collapsed } = useProSidebar();
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -437,7 +442,6 @@ const LayerSideBar = () => {
             setNewFilterObject(filterObject);
         }
     }, [filterObject]);
-
     const UpdateFilterObject = (index, object) => {
         let arrbuff = newFilterObject;
         arrbuff[index] = object;
@@ -448,95 +452,111 @@ const LayerSideBar = () => {
             ? colors.black[400]
             : colors.turquoise[600];
     return (
-        <div
-            style={{
-                display: "flex",
-                position: "absolute",
-                minHeight: "1000px",
-                height: "100%",
-                position: "sticky",
-                top: 0,
-            }}
+        <Slide
+            direction="right"
+            in={!collapse}
+            mountOnEnter
+            unmountOnExit
+            style={{ height: "100%", zIndex: 1000 }}
         >
-            <Sidebar
-                transitionDuration={500}
-                rootStyles={{
-                    [`.${sidebarClasses.container}`]: {
-                        boxShadow: `${
-                            collapsed
-                                ? "1px 5px 10px -5px black"
-                                : "1px 5px 15px -1px black"
-                        }`,
-                        backgroundColor: `${
-                            theme.palette.mode === "dark"
-                                ? colors.white[700]
-                                : colors.white[900]
-                        } !important`,
-                        width: `${collapsed ? "120px" : "250px"}`,
-                    },
-                    border: "none",
-                    width: "250px",
+            <div
+                style={{
+                    display: "flex",
+                    height: "980px",
+                    top: 0,
+                    left: 0,
                 }}
             >
-                <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    ml="15px"
-                    color={colors.black[300]}
-                >
-                    {!collapsed && (
-                        <Box
-                            display="flex"
-                            flexDirection="column"
-                            alignItems="center"
-                            margin="auto"
-                        >
-                            Layers
-                        </Box>
-                    )}
-                    <IconButton onClick={() => collapseSidebar()}>
-                        <MenuOutlinedIcon />
-                    </IconButton>
-                </Box>
-
-                <hr
-                    style={{
-                        border: `1.5px solid ${colors.black["400"]}`,
-                        margin: "5px",
+                <Sidebar
+                    transitionDuration={250}
+                    rootStyles={{
+                        [`.${sidebarClasses.container}`]: {
+                            boxShadow: `${
+                                collapsed
+                                    ? "1px 5px 10px -5px black"
+                                    : "1px 5px 15px -1px black"
+                            }`,
+                            backgroundColor: `${
+                                theme.palette.mode === "dark"
+                                    ? colors.white[700]
+                                    : colors.white[900]
+                            } !important`,
+                            width: `${collapsed ? "120px" : "250px"}`,
+                        },
+                        border: "none",
+                        width: "250px",
+                        height: "100%",
                     }}
-                />
-                {Layers.map((layer, index) => {
-                    let filterIndex = newFilterObject.indexOf(
-                        newFilterObject.find((element) => {
-                            return element.layer === layer.id;
-                        })
-                    );
+                >
+                    <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        ml="15px"
+                        color={colors.black[300]}
+                    >
+                        {!collapsed && (
+                            <Box
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="center"
+                                margin="auto"
+                            >
+                                Layers
+                            </Box>
+                        )}
+                        <IconButton
+                            onClick={() => {
+                                setCollapse(true);
+                            }}
+                        >
+                            <ArrowBackIosNewIcon />
+                        </IconButton>
+                    </Box>
 
-                    return (
-                        <>
-                            <DndProvider backend={HTML5Backend}>
-                                <LayerItem
-                                    key={index}
-                                    layer={layer}
-                                    index={index}
-                                    colors={colors}
-                                    collapsed={collapsed}
-                                    filterObject={newFilterObject[filterIndex]}
-                                    setfilterObject={(index, object) =>
-                                        UpdateFilterObject(index, object)
-                                    }
-                                    filterIndex={filterIndex}
-                                    FilterValues={() =>
-                                        FilterValues(newFilterObject)
-                                    }
-                                />
-                            </DndProvider>
-                        </>
-                    );
-                })}
-            </Sidebar>
-        </div>
+                    <hr
+                        style={{
+                            border: `1.5px solid ${colors.black["400"]}`,
+                            margin: "5px",
+                        }}
+                    />
+                    {Layers.map((layer, index) => {
+                        let filterIndex = newFilterObject.indexOf(
+                            newFilterObject.find((element) => {
+                                return element.layer === layer.id;
+                            })
+                        );
+
+                        return (
+                            <>
+                                <DndProvider backend={HTML5Backend}>
+                                    <LayerItem
+                                        key={index}
+                                        layer={layer}
+                                        index={index}
+                                        colors={colors}
+                                        collapsed={collapsed}
+                                        filterObject={
+                                            newFilterObject[filterIndex]
+                                        }
+                                        setfilterObject={(index, object) =>
+                                            UpdateFilterObject(index, object)
+                                        }
+                                        filterIndex={filterIndex}
+                                        FilterValues={() =>
+                                            FilterValues(newFilterObject)
+                                        }
+                                        AllowChangeView={() => {
+                                            setAllowChangeView();
+                                        }}
+                                    />
+                                </DndProvider>
+                            </>
+                        );
+                    })}
+                </Sidebar>
+            </div>
+        </Slide>
     );
 };
 

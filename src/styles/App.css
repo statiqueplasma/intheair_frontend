@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    min-height: 1000px !important;
+    min-height: 100% !important;
     height: 100% !important;
     width: 100% !important;
     font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -10,14 +10,14 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 #root {
-    min-height: 1000px !important;
+    min-height: 100% !important;
     height: auto !important;
     width: 100% !important;
 }
 
 html {
     min-height: 100% !important;
-    height: auto !important;
+    height: 100% !important;
     width: 100% !important;
 }
 @font-face {
@@ -37,4 +37,66 @@ html {
 
 .edit-modal-black .modal-content {
     background-color: rgb(39, 39, 39);
+}
+
+.leaflet-container.crosshair-cursor-enabled {
+    cursor: crosshair;
+}
+
+.leaflet-container .leaflet-control-mouseposition {
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 5px #bbb;
+    padding: 0 5px;
+    margin: 0;
+    color: #333;
+    font: 11px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.tooltip-mesure-center {
+    background: purple;
+    color: #dfdfdf;
+    font-weight: bold;
+    border: 2px solid red;
+}
+.leaflet-tooltip-left.tooltip-mesure-center::before {
+    border-left-color: red;
+}
+.leaflet-tooltip-right.tooltip-mesure-center::before {
+    border-right-color: red;
+}
+
+.map-resize {
+    width: 85.5%;
+}
+
+.popup-proprety {
+    background: red;
+}
+
+#popup-prop {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#popup-prop td,
+#popup-prop th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#popup-prop tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#popup-prop tr:hover {
+    background-color: #ddd;
+}
+
+#popup-prop th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04aa6d;
+    color: white;
 }

@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useData } from "../../../contexts/DataContext";
 import { red } from "@mui/material/colors";
+import { PopupTable } from "../global/popupTable";
 //import drones from '../data/dronefields2.json'; //TODO : inclure la deuxième carte des restrictions UAS depuis API Géoportail
 
 function onEachFeatureProject(feature, layer, projectData) {
@@ -19,6 +20,7 @@ function onEachFeatureProject(feature, layer, projectData) {
         text +=
             "<br><b>Type : </b>" +
             projectData.project_type_label.replace(/_/g, " ");
+
         return text;
     }
 
@@ -123,13 +125,23 @@ function GeoData() {
     }, [loading, projectsData, droneFields]);
 }
 
-function ProjectsMap() {
-    const center = [46.227638, 2.213749];
+function ChangeView({ center }) {
+    const map = useMap();
+    if (center) {
+        map.setView(center, 16);
+    }
+
+    return null;
+}
+
+function ProjectsMap({ centerIn }) {
+    const [center, setCenter] = useState([46.227638, 2.213749]);
     const { user } = useAuth();
     // const [projects, setProjects] = useState(null);
 
     return (
         <MapContainer center={center} zoom={6}>
+            <ChangeView center={centerIn} />
             <TileLayer
                 attribution='&copy; OpenStreetMap France | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png"

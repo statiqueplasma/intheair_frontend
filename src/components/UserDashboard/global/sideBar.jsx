@@ -6,10 +6,10 @@ import {
     menuClasses,
     sidebarClasses,
 } from "react-pro-sidebar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Box, IconButton, Typography, useTheme, Divider } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { tokens } from "../../../theme";
+import { tokens, ColorModeContext } from "../../../theme";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
@@ -21,10 +21,12 @@ import FolderIcon from "@mui/icons-material/Folder";
 import DomainAddIcon from "@mui/icons-material/DomainAdd";
 import AddHomeIcon from "@mui/icons-material/AddHome";
 import AddchartIcon from "@mui/icons-material/Addchart";
-import AssessmentIcon from "@mui/icons-material/Assessment";
+import HomeIcon from "@mui/icons-material/Home";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useData } from "../../../contexts/DataContext";
-
+import LogoutIcon from "@mui/icons-material/Logout";
+import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 const Item = ({ title, to, icon, selected, setSelected }) => {
     let navigate = useNavigate();
     const location = useLocation();
@@ -62,6 +64,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 };
 
 const SideBar = ({ logo }) => {
+    const colorMode = useContext(ColorModeContext);
     const { collapseSidebar, toggleSidebar, collapsed } = useProSidebar();
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
@@ -73,7 +76,13 @@ const SideBar = ({ logo }) => {
         theme.palette.mode === "light"
             ? colors.black[400]
             : colors.turquoise[600];
-
+    const styleIconTop =
+        theme.palette.mode === "light"
+            ? colors.black[400]
+            : colors.turquoise[500];
+    const ChangeTheme = () => {
+        colorMode.toggleColorMode();
+    };
     return (
         <div
             style={{
@@ -124,10 +133,29 @@ const SideBar = ({ logo }) => {
                 >
                     <Box
                         display="flex"
-                        justifyContent="space-between"
+                        justifyContent="center"
                         alignItems="start"
                         ml="15px"
+                        p="5px"
                     >
+                        <IconButton
+                            onClick={ChangeTheme}
+                            style={{ mr: "10px", mt: "10px" }}
+                        >
+                            {theme.palette.mode === "dark" ? (
+                                <DarkModeOutlinedIcon
+                                    style={{
+                                        color: `${styleIconTop}`,
+                                    }}
+                                />
+                            ) : (
+                                <LightModeOutlinedIcon
+                                    style={{
+                                        color: `${styleIconTop}`,
+                                    }}
+                                />
+                            )}
+                        </IconButton>
                         {!collapsed && (
                             <Box
                                 display="flex"
@@ -146,7 +174,7 @@ const SideBar = ({ logo }) => {
                                     <img
                                         src={logo}
                                         style={{
-                                            width: "100px",
+                                            width: "auto",
                                             height: "100px",
                                             margin: "15px 0 0 0",
                                         }}
@@ -154,7 +182,7 @@ const SideBar = ({ logo }) => {
                                     {/* <img src={companyData.company_logo} style={{ width: "100px", height: "100px", margin :"15px 0 0 0"}}/> */}
                                 </Box>
                                 <Typography
-                                    variant="h4"
+                                    variant="h5"
                                     align="center"
                                     color={
                                         theme.palette.mode === "light"
@@ -181,9 +209,13 @@ const SideBar = ({ logo }) => {
                         )}
                         <IconButton
                             onClick={() => collapseSidebar()}
-                            style={{ margin: "10px 10px 0 5px" }}
+                            style={{ ml: "10px", mt: "10px" }}
                         >
-                            <MenuOutlinedIcon />
+                            <MenuOutlinedIcon
+                                style={{
+                                    color: `${styleIconTop}`,
+                                }}
+                            />
                         </IconButton>
                     </Box>
 
@@ -248,6 +280,37 @@ const SideBar = ({ logo }) => {
                         title="Users Information"
                         to="/dashboard/user"
                         icon={<SupervisorAccountIcon />}
+                        selected={selected}
+                        setSelected={setSelected}
+                    />
+
+                    <hr
+                        style={{
+                            border: `1.5px solid ${colors.black["400"]}`,
+                        }}
+                    />
+                    {/* ============================== Navigation ======================== */}
+                    {!collapsed && (
+                        <Typography
+                            variant="h8"
+                            display="block"
+                            color={separatorStyle}
+                            sx={{ m: "0px 0 5px 10px" }}
+                        >
+                            Navigation
+                        </Typography>
+                    )}
+                    <Item
+                        title="Home"
+                        to="/"
+                        icon={<HomeIcon />}
+                        selected={selected}
+                        setSelected={setSelected}
+                    />
+                    <Item
+                        title="Log Out"
+                        to="/logout"
+                        icon={<LogoutIcon />}
                         selected={selected}
                         setSelected={setSelected}
                     />

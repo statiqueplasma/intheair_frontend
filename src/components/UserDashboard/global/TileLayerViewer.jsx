@@ -66,7 +66,7 @@ const TileLayerViewer = ({ layer }) => {
         return (
             <TileLayer
                 url={`http://127.0.0.1:8000/api/raster/tiles/${layer.data.id}/{z}/{x}/{y}.png`}
-                maxZoom={21}
+                maxZoom={22}
             />
         );
 };

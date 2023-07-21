@@ -256,8 +256,9 @@ const NestedFileBrowser = ({ title, files, filetypes, extention, project }) => {
                                                     file.file_type.toLowerCase() ===
                                                     "geo_file"
                                                 ) {
-                                                    navigate(
-                                                        `/dashboard/viewgeo/${project.id}/${file.id}`
+                                                    window.open(
+                                                        `/mapview/${project.id}/${file.id}`,
+                                                        "_blank"
                                                     );
                                                 } else if (
                                                     file.file_type.toLowerCase() ===
